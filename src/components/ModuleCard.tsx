@@ -1,6 +1,7 @@
-import { PlayCircle, TrendingUp } from 'lucide-react';
+import { PlayCircle, ArrowRight, Play, Sparkles, TrendingUp, Flame, Eye } from 'lucide-react';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 
 interface ModuleCardProps {
   module: {
@@ -20,98 +21,174 @@ interface ModuleCardProps {
 }
 
 export function ModuleCard({ module, onClick }: ModuleCardProps) {
+  const hasStarted = (module.progress || 0) > 0;
+  const isCompleted = (module.progress || 0) >= 100;
+
+  // ═══════════════════════════════════════════════════════════
+  // CONFIGURAÇÃO DOS BADGES
+  // ═══════════════════════════════════════════════════════════
+  const getBadgeConfig = (badgeText: string | null | undefined) => {
+    if (!badgeText) return null;
+
+    const badgeUpper = badgeText.toUpperCase();
+
+    switch (badgeUpper) {
+      case 'NOVO':
+        return {
+          text: 'NOVO',
+          className: 'bg-green-500/90 text-white border-green-400/50',
+          icon: <Sparkles className="w-3 h-3" />
+        };
+      case 'RECOMENDADO':
+        return {
+          text: 'RECOMENDADO',
+          className: 'bg-yellow-500/90 text-black border-yellow-400/50',
+          icon: <TrendingUp className="w-3 h-3" />
+        };
+      case 'POPULAR':
+        return {
+          text: 'POPULAR',
+          className: 'bg-red-500/90 text-white border-red-400/50',
+          icon: <Flame className="w-3 h-3" />
+        };
+      case 'MAIS VISTO':
+        return {
+          text: 'MAIS VISTO',
+          className: 'bg-purple-500/90 text-white border-purple-400/50',
+          icon: <Eye className="w-3 h-3" />
+        };
+      default:
+        return {
+          text: badgeText,
+          className: 'bg-primary/90 text-primary-foreground border-primary/50',
+          icon: null
+        };
+    }
+  };
+
+  const badgeConfig = getBadgeConfig(module.badge);
+
+  // ═══════════════════════════════════════════════════════════
+  // DETERMINAR TEXTO E ÍCONE DO BOTÃO
+  // ═══════════════════════════════════════════════════════════
+  const getButtonText = () => {
+    if (isCompleted) return 'Rever Módulo';
+    if (hasStarted) return 'Continuar Módulo';
+    return 'Começar Módulo';
+  };
+
+  const getButtonIcon = () => {
+    if (isCompleted) return <ArrowRight className="w-4 h-4" />;
+    if (hasStarted) return <Play className="w-4 h-4" />;
+    return <PlayCircle className="w-4 h-4" />;
+  };
+
   return (
-    <Card
-      onClick={onClick}
-      className="relative snap-start flex-shrink-0 w-[300px] sm:w-[350px] overflow-hidden group cursor-pointer hover:scale-105 hover:shadow-2xl hover:border-primary/50 transition-all duration-300"
-    >
+    <Card className="relative snap-start flex-shrink-0 w-[260px] sm:w-[280px] overflow-hidden group transition-all duration-300 hover:shadow-xl hover:border-primary/30">
       {/* Thumbnail */}
       <div className="relative aspect-video overflow-hidden bg-muted">
         <img
           src={module.thumbnail}
           alt={module.title}
           loading="lazy"
-          className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
+          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
         />
 
-        {/* Badge */}
-        {module.badge && (
-          <div className="absolute top-3 right-3">
-            <Badge 
-              variant="secondary"
-              className="bg-primary/90 text-primary-foreground backdrop-blur-sm shadow-lg"
+        {/* Badge Colorido */}
+        {badgeConfig && (
+          <div className="absolute top-2 right-2">
+            <div 
+              className={`
+                ${badgeConfig.className}
+                backdrop-blur-sm shadow-lg text-xs px-2.5 py-1 rounded-full 
+                font-bold tracking-wide border flex items-center gap-1.5
+                animate-in fade-in slide-in-from-top-2 duration-500
+              `}
             >
-              {module.badge}
-            </Badge>
+              {badgeConfig.icon}
+              <span>{badgeConfig.text}</span>
+            </div>
           </div>
         )}
 
         {/* Module Number */}
-        <div className="absolute top-3 left-3">
-          <div className="bg-black/60 backdrop-blur-sm text-white rounded-full w-10 h-10 flex items-center justify-center font-bold text-sm border-2 border-white/20">
+        <div className="absolute top-2 left-2">
+          <div className="bg-black/70 backdrop-blur-sm text-white rounded-full w-8 h-8 flex items-center justify-center font-bold text-xs border border-white/20 shadow-lg">
             {module.number}
           </div>
         </div>
 
-        {/* Play Icon Overlay */}
-        <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-          <div className="transform scale-75 group-hover:scale-100 transition-transform duration-300">
-            <PlayCircle className="w-20 h-20 text-white drop-shadow-2xl" />
+        {/* Progress Indicator Overlay */}
+        {hasStarted && !isCompleted && (
+          <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-2">
+            <div className="flex items-center gap-2 text-white text-xs">
+              <div className="flex-1 h-1 bg-white/30 rounded-full overflow-hidden">
+                <div
+                  className="h-full bg-primary transition-all duration-500"
+                  style={{ width: `${module.progress}%` }}
+                />
+              </div>
+              <span className="font-semibold">{module.progress}%</span>
+            </div>
           </div>
-        </div>
+        )}
+
+        {/* Completed Badge */}
+        {isCompleted && (
+          <div className="absolute bottom-2 left-2 right-2">
+            <div className="bg-green-500/90 backdrop-blur-sm text-white text-xs font-semibold px-3 py-1.5 rounded-full flex items-center justify-center gap-1 border border-green-400/50 shadow-lg">
+              <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+              </svg>
+              Concluído
+            </div>
+          </div>
+        )}
+
+        {/* Glow Effect on Hover */}
+        <div className="absolute inset-0 bg-gradient-to-t from-primary/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
       </div>
 
-      {/* Content */}
-      <div className="p-6">
-        <h3 className="text-xl font-bold text-foreground line-clamp-2 mb-3 group-hover:text-primary transition-colors">
+      {/* Content - Compacto */}
+      <div className="p-4">
+        <h3 className="text-base font-bold text-foreground line-clamp-2 mb-2 min-h-[2.5rem] group-hover:text-primary transition-colors">
           {module.title}
         </h3>
 
-        <p className="text-sm text-muted-foreground mb-4 line-clamp-3 leading-relaxed">
+        <p className="text-xs text-muted-foreground mb-3 line-clamp-2 leading-relaxed">
           {module.description}
         </p>
 
-        {/* Meta Info */}
-        <div className="flex items-center justify-between text-sm text-muted-foreground mb-4">
-          <span className="flex items-center gap-1.5">
-            <PlayCircle className="w-4 h-4" />
+        {/* Meta Info - Compacto */}
+        <div className="flex items-center justify-between text-xs text-muted-foreground mb-3">
+          <span className="flex items-center gap-1">
+            <PlayCircle className="w-3 h-3" />
             <span className="font-medium">{module.totalLessons} aulas</span>
           </span>
-          <span className="flex items-center gap-1.5">
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <span className="flex items-center gap-1">
+            <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
-            {module.duration}
+            <span className="font-medium">{module.duration}</span>
           </span>
         </div>
 
-        {/* Progress Bar */}
-        <div className="space-y-2">
-          <div className="flex items-center justify-between text-xs">
-            <span className="text-muted-foreground font-medium">Progresso</span>
-            <span className="font-bold text-foreground">{module.progress || 0}%</span>
-          </div>
-          <div className="h-2 bg-muted rounded-full overflow-hidden">
-            <div
-              className="h-full bg-gradient-to-r from-primary to-primary/80 transition-all duration-500 ease-out"
-              style={{ width: `${module.progress || 0}%` }}
-            />
-          </div>
-        </div>
-
-        {/* CTA */}
-        <div className="mt-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-          <div className="flex items-center justify-center gap-2 text-primary text-sm font-semibold">
-            <span>Começar Módulo</span>
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-            </svg>
-          </div>
-        </div>
+        {/* CTA Button - SEMPRE VISÍVEL */}
+        <Button
+          onClick={(e) => {
+            e.stopPropagation();
+            onClick?.();
+          }}
+          className="w-full gap-2 text-sm h-9 font-semibold"
+          variant={isCompleted ? "outline" : "default"}
+        >
+          {getButtonIcon()}
+          <span>{getButtonText()}</span>
+        </Button>
       </div>
 
-      {/* Shimmer effect */}
-      <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
+      {/* Shimmer Effect */}
+      <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none">
         <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000" />
       </div>
     </Card>
