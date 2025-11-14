@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
-import { getModuleLessons, getTotalLessons } from '@/data/lessons';
+import { getModulesConfig } from '@/data/modulesConfig';
+import { getTotalLessons } from '@/data/lessons';
 import { ModuleCard } from '@/components/ModuleCard';
 import { JourneyMap } from '@/components/JourneyMap';
 import { useUserModules } from '@/hooks/useUserModules';
@@ -15,96 +16,6 @@ import { supabase } from '@/integrations/supabase/client';
 import { WelcomeModal } from '@/components/WelcomeModal';
 import { ValueBreakdownCard } from '@/components/ValueBreakdownCard';
 import { NotificationPrompt } from '@/components/NotificationPrompt';
-
-// ═══════════════════════════════════════════════════════════
-// DEFINIÇÃO DOS MÓDULOS (compatível com lessons.ts)
-// ═══════════════════════════════════════════════════════════
-const modulesData = [
-  {
-    id: 1,
-    number: 1,
-    title: "Reset Emocional",
-    slug: "reset-emocional",
-    description: "Aprende a parar de agir pela emoção e descobre a melhor técnica de reconquista amorosa. O primeiro passo para virar o jogo.",
-    thumbnail: "https://pub-335435355c6548d7987945a540eca66b.r2.dev/MODULO%201.webp",
-    duration: "65 min",
-    lessons: 8,
-    progress: 0,
-    badge: "MAIS VISTO"
-  },
-  {
-    id: 2,
-    number: 2,
-    title: "Mapa da Mente Masculina",
-    slug: "mapa-mente-masculina",
-    description: "Descobre porque homens se apaixonam pela ausência e como fazer ele sentir a tua falta de forma irresistível.",
-    thumbnail: "https://pub-335435355c6548d7987945a540eca66b.r2.dev/MODULO%202.webp",
-    duration: "58 min",
-    lessons: 8,
-    progress: 0,
-    badge: "RECOMENDADO"
-  },
-  {
-    id: 3,
-    number: 3,
-    title: "Gatilhos da Memória Emocional",
-    slug: "gatilhos-memoria-emocional",
-    description: "Como ativar a memória emocional dele e fazê-lo reviver os melhores momentos convosco de forma involuntária.",
-    thumbnail: "https://pub-335435355c6548d7987945a540eca66b.r2.dev/MODULO%203.webp",
-    duration: "42 min",
-    lessons: 4,
-    progress: 0,
-    badge: "NOVO"
-  },
-  {
-    id: 4,
-    number: 4,
-    title: "A Frase de 5 Palavras",
-    slug: "frase-5-palavras",
-    description: "A frase secreta de 5 palavras que ativa o desejo dele instantaneamente. Usa no WhatsApp, ao vivo ou por áudio.",
-    thumbnail: "https://pub-335435355c6548d7987945a540eca66b.r2.dev/MODULO%204.webp",
-    duration: "48 min",
-    lessons: 4,
-    progress: 0,
-    badge: "POPULAR"
-  },
-  {
-    id: 5,
-    number: 5,
-    title: "Primeiro Contato Estratégico",
-    slug: "primeiro-contato-estrategico",
-    description: "O que dizer quando ele te procurar (ou como fazer ele dar o primeiro passo). Scripts prontos para cada situação.",
-    thumbnail: "https://pub-335435355c6548d7987945a540eca66b.r2.dev/MODULO%205.webp",
-    duration: "32 min",
-    lessons: 3,
-    progress: 0,
-    badge: "NOVO"
-  },
-  {
-    id: 6,
-    number: 6,
-    title: "Domínio da Conversa",
-    slug: "dominio-conversa",
-    description: "Como manter conversas envolventes sem parecer carente. As 3 frases que ativam o desejo do homem.",
-    thumbnail: "https://pub-335435355c6548d7987945a540eca66b.r2.dev/MODULO%206.webp",
-    duration: "52 min",
-    lessons: 6,
-    progress: 0,
-    badge: "POPULAR"
-  },
-  {
-    id: 7,
-    number: 7,
-    title: "Conquista Duradoura",
-    slug: "conquista-duradoura",
-    description: "Os 5 pilares do relacionamento saudável. Como manter a chama acesa e transformar reconquista em amor eterno.",
-    thumbnail: "https://pub-335435355c6548d7987945a540eca66b.r2.dev/MODULO%207.webp",
-    duration: "55 min",
-    lessons: 6,
-    progress: 0,
-    badge: "MAIS VISTO"
-  }
-];
 
 const Dashboard = () => {
   const { user, loading, signOut } = useAuth();
@@ -128,7 +39,7 @@ const Dashboard = () => {
   }, [user, loading, navigate]);
 
   // ═══════════════════════════════════════════════════════════
-  // CARREGAR PERFIL DO USUÁRIO
+  // CARREGAR PERFIL
   // ═══════════════════════════════════════════════════════════
   useEffect(() => {
     const fetchProfile = async () => {
@@ -155,13 +66,12 @@ const Dashboard = () => {
   }, [user]);
 
   // ═══════════════════════════════════════════════════════════
-  // CARREGAR ESTATÍSTICAS DO USUÁRIO
+  // CARREGAR ESTATÍSTICAS
   // ═══════════════════════════════════════════════════════════
   useEffect(() => {
     const fetchUserStats = async () => {
       if (user) {
         try {
-          // Buscar estatísticas da tabela user_stats
           const { data: stats } = await supabase
             .from('user_stats')
             .select('*')
@@ -201,7 +111,7 @@ const Dashboard = () => {
       const daysRemaining = Math.ceil((releaseDate.getTime() - Date.now()) / (1000 * 60 * 60 * 24));
       
       toast.error(
-        `🔒 Este módulo será liberado em ${releaseDate.toLocaleDateString('pt-PT')} (${daysRemaining} dias)`,
+        `🔒 Este módulo será liberado em ${releaseDate.toLocaleDateString('pt-PT')} (${daysRemaining} ${daysRemaining === 1 ? 'dia' : 'dias'})`,
         { duration: 4000 }
       );
       return;
@@ -243,18 +153,16 @@ const Dashboard = () => {
   if (!user) return null;
 
   // ═══════════════════════════════════════════════════════════
-  // PROCESSAR MÓDULOS COM STATUS DE LIBERAÇÃO
+  // PREPARAR MÓDULOS COM STATUS
   // ═══════════════════════════════════════════════════════════
-  const modulesWithStatus = modulesData.map(module => {
+  const modulesConfig = getModulesConfig();
+  const modulesWithStatus = modulesConfig.map(module => {
     const userModule = userModules.find(m => m.module_number === module.number);
-    const moduleLessons = getModuleLessons(module.number);
     
     return {
       ...module,
       isReleased: userModule?.is_released || false,
       releaseDate: userModule?.release_date,
-      totalLessons: moduleLessons.length,
-      onClick: () => handleModuleClick(module.number)
     };
   });
 
@@ -316,7 +224,6 @@ const Dashboard = () => {
         {/* Welcome Banner */}
         <section className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-primary/10 via-secondary/10 to-background border border-border p-8 md:p-12">
           <div className="relative z-10 max-w-3xl">
-            {/* Value Breakdown Card */}
             <div className="mb-8">
               <ValueBreakdownCard />
             </div>
@@ -392,7 +299,7 @@ const Dashboard = () => {
               O Código da Reconquista: A Jornada Completa
             </h2>
             <p className="text-muted-foreground">
-              {modulesData.length} módulos transformadores para dominar a arte da reconquista
+              {modulesConfig.length} módulos transformadores para dominar a arte da reconquista
             </p>
           </div>
 
@@ -400,8 +307,11 @@ const Dashboard = () => {
             <div className="flex gap-6 overflow-x-auto pb-6 scrollbar-hide snap-x snap-mandatory">
               {modulesWithStatus.map((module) => (
                 <ModuleCard 
-                  key={module.id} 
+                  key={module.id}
                   module={module}
+                  isReleased={module.isReleased}
+                  releaseDate={module.releaseDate}
+                  onClick={() => handleModuleClick(module.number)}
                 />
               ))}
             </div>
@@ -500,14 +410,20 @@ const Dashboard = () => {
         </section>
       </div>
 
-      {/* Debug Info (Remover em produção) */}
+      {/* Debug Info */}
       {process.env.NODE_ENV === 'development' && (
-        <div className="fixed bottom-4 left-4 bg-black/90 text-white p-4 rounded-lg text-xs max-w-sm">
+        <div className="fixed bottom-4 left-4 bg-black/90 text-white p-4 rounded-lg text-xs max-w-sm z-50">
           <p className="font-bold mb-2">🔍 Dashboard Debug</p>
           <p>User: {user?.email}</p>
           <p>Modules Released: {userModules.filter(m => m.is_released).length}/{userModules.length}</p>
+          <p>Total Modules: {modulesConfig.length}</p>
           <p>Global Progress: {userStats.globalProgress}%</p>
-          <p>Streak: {userStats.streak} dias</p>
+          <button
+            onClick={() => console.log('Modules:', modulesWithStatus)}
+            className="mt-2 px-2 py-1 bg-primary rounded text-xs"
+          >
+            Log Modules
+          </button>
         </div>
       )}
     </div>
