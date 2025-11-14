@@ -28,7 +28,17 @@ export function VideoPlayer({ youtubeId, onProgress, onComplete }: VideoPlayerPr
 
     try {
       const player = new Plyr(playerRef.current, {
-        controls: ['play-large', 'play', 'progress', 'current-time', 'mute', 'volume', 'settings', 'pip', 'fullscreen'],
+        controls: [
+          'play-large',
+          'play',
+          'progress',
+          'current-time',
+          'mute',
+          'volume',
+          'settings',
+          'pip',
+          'fullscreen',
+        ],
         settings: ['quality', 'speed'],
         youtube: {
           noCookie: true,
@@ -64,7 +74,6 @@ export function VideoPlayer({ youtubeId, onProgress, onComplete }: VideoPlayerPr
           }
         }
       });
-
     } catch (error) {
       setError('Falha ao inicializar player');
       setIsLoading(false);
@@ -78,22 +87,22 @@ export function VideoPlayer({ youtubeId, onProgress, onComplete }: VideoPlayerPr
   }, [youtubeId]);
 
   return (
-    <div className="relative w-full aspect-video rounded-xl overflow-hidden bg-black">
+    <div className="relative aspect-video w-full overflow-hidden rounded-xl bg-black">
       {/* Loading Skeleton */}
       {isLoading && (
-        <div className="absolute inset-0 bg-gradient-to-br from-gray-900 to-gray-800 flex items-center justify-center z-10">
+        <div className="absolute inset-0 z-10 flex items-center justify-center bg-gradient-to-br from-gray-900 to-gray-800">
           <div className="text-center">
-            <Loader2 className="w-12 h-12 text-primary animate-spin mx-auto mb-4" />
-            <p className="text-white text-sm">Carregando vídeo...</p>
+            <Loader2 className="mx-auto mb-4 h-12 w-12 animate-spin text-primary" />
+            <p className="text-sm text-white">Carregando vídeo...</p>
           </div>
         </div>
       )}
 
       {/* Error State */}
       {error && (
-        <div className="absolute inset-0 bg-gray-900 flex items-center justify-center z-10">
-          <div className="text-center p-8">
-            <p className="text-red-500 mb-4">❌ {error}</p>
+        <div className="absolute inset-0 z-10 flex items-center justify-center bg-gray-900">
+          <div className="p-8 text-center">
+            <p className="mb-4 text-red-500">❌ {error}</p>
             <a
               href={`https://www.youtube.com/watch?v=${youtubeId}`}
               target="_blank"

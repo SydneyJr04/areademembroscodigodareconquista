@@ -7,20 +7,20 @@ import { useEffect } from 'react';
 
 const testimonials = [
   {
-    name: "Maria Silva",
-    story: "Em 2 semanas ele voltou! Segui tudo à risca e funcionou. Obrigada! ❤️",
-    avatar: "👩🏽"
+    name: 'Maria Silva',
+    story: 'Em 2 semanas ele voltou! Segui tudo à risca e funcionou. Obrigada! ❤️',
+    avatar: '👩🏽',
   },
   {
-    name: "Ana Costa",
-    story: "Não acreditava que ia funcionar, mas ele me procurou pedindo uma segunda chance!",
-    avatar: "👩🏾"
+    name: 'Ana Costa',
+    story: 'Não acreditava que ia funcionar, mas ele me procurou pedindo uma segunda chance!',
+    avatar: '👩🏾',
   },
   {
-    name: "Joana Santos",
-    story: "Aprendi a me valorizar e agora ele não me larga mais. Valeu cada minuto!",
-    avatar: "👩🏻"
-  }
+    name: 'Joana Santos',
+    story: 'Aprendi a me valorizar e agora ele não me larga mais. Valeu cada minuto!',
+    avatar: '👩🏻',
+  },
 ];
 
 const Community = () => {
@@ -35,7 +35,7 @@ const Community = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-background">
+      <div className="flex min-h-screen items-center justify-center bg-background">
         <div className="animate-pulse text-foreground">A carregar...</div>
       </div>
     );
@@ -46,24 +46,20 @@ const Community = () => {
   return (
     <div className="min-h-screen bg-background">
       {/* Header */}
-      <nav className="sticky top-0 z-50 bg-background/95 backdrop-blur-lg border-b border-border">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-16">
-            <Button
-              variant="ghost"
-              onClick={() => navigate('/dashboard')}
-              className="gap-2"
-            >
+      <nav className="sticky top-0 z-50 border-b border-border bg-background/95 backdrop-blur-lg">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="flex h-16 items-center justify-between">
+            <Button variant="ghost" onClick={() => navigate('/dashboard')} className="gap-2">
               ← Voltar ao Dashboard
             </Button>
           </div>
         </div>
       </nav>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-12">
+      <div className="mx-auto max-w-7xl space-y-12 px-4 py-12 sm:px-6 lg:px-8">
         {/* Hero Section */}
         <div className="text-center">
-          <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-4">
+          <h1 className="mb-4 text-4xl font-bold text-foreground md:text-5xl">
             Comunidade Código da Reconquista
           </h1>
           <p className="text-xl text-muted-foreground">
@@ -72,25 +68,25 @@ const Community = () => {
         </div>
 
         {/* WhatsApp Community Card */}
-        <Card className="bg-gradient-to-br from-green-500/20 to-background border-green-500/30 p-8">
-          <div className="flex flex-col md:flex-row items-center gap-6">
-            <div className="bg-green-500/20 p-6 rounded-full">
-              <MessageCircle className="w-16 h-16 text-green-500" />
+        <Card className="border-green-500/30 bg-gradient-to-br from-green-500/20 to-background p-8">
+          <div className="flex flex-col items-center gap-6 md:flex-row">
+            <div className="rounded-full bg-green-500/20 p-6">
+              <MessageCircle className="h-16 w-16 text-green-500" />
             </div>
             <div className="flex-1 text-center md:text-left">
-              <h2 className="text-2xl font-bold text-foreground mb-3">
+              <h2 className="mb-3 text-2xl font-bold text-foreground">
                 💬 Comunidade Exclusiva no WhatsApp
               </h2>
-              <p className="text-muted-foreground mb-6">
-                Entre no nosso grupo secreto com centenas de alunas transformando suas vidas amorosas! 
-                Compartilhe experiências, tire dúvidas e receba suporte diário.
+              <p className="mb-6 text-muted-foreground">
+                Entre no nosso grupo secreto com centenas de alunas transformando suas vidas
+                amorosas! Compartilhe experiências, tire dúvidas e receba suporte diário.
               </p>
               <Button
                 size="lg"
-                className="bg-green-500 hover:bg-green-600 text-white gap-2"
+                className="gap-2 bg-green-500 text-white hover:bg-green-600"
                 onClick={() => window.open('https://wa.me/258834569225', '_blank')}
               >
-                <MessageCircle className="w-5 h-5" />
+                <MessageCircle className="h-5 w-5" />
                 Entrar Agora no WhatsApp
               </Button>
             </div>
@@ -98,30 +94,25 @@ const Community = () => {
         </Card>
 
         {/* Lives Mentoria Card (Upsell) */}
-        <Card className="bg-gradient-to-br from-purple-500/20 to-background border-purple-500/30 p-8">
-          <div className="flex flex-col md:flex-row items-center gap-6">
-            <div className="bg-purple-500/20 p-6 rounded-full">
-              <Video className="w-16 h-16 text-purple-500" />
+        <Card className="border-purple-500/30 bg-gradient-to-br from-purple-500/20 to-background p-8">
+          <div className="flex flex-col items-center gap-6 md:flex-row">
+            <div className="rounded-full bg-purple-500/20 p-6">
+              <Video className="h-16 w-16 text-purple-500" />
             </div>
             <div className="flex-1 text-center md:text-left">
-              <div className="inline-block bg-purple-500/20 px-3 py-1 rounded-full text-sm font-semibold text-purple-400 mb-3">
+              <div className="mb-3 inline-block rounded-full bg-purple-500/20 px-3 py-1 text-sm font-semibold text-purple-400">
                 PREMIUM
               </div>
-              <h2 className="text-2xl font-bold text-foreground mb-3">
+              <h2 className="mb-3 text-2xl font-bold text-foreground">
                 Lives Semanais de Mentoria
               </h2>
-              <p className="text-muted-foreground mb-4">
-                Aulas ao vivo comigo, sessões de Perguntas & Respostas e análise de casos reais. 
+              <p className="mb-4 text-muted-foreground">
+                Aulas ao vivo comigo, sessões de Perguntas & Respostas e análise de casos reais.
                 Acesso direto para tirar suas dúvidas e acelerar sua reconquista.
               </p>
-              <p className="text-3xl font-bold text-purple-400 mb-6">
-                647 MZN/mês
-              </p>
-              <Button
-                size="lg"
-                className="bg-purple-500 hover:bg-purple-600 text-white gap-2"
-              >
-                <Video className="w-5 h-5" />
+              <p className="mb-6 text-3xl font-bold text-purple-400">647 MZN/mês</p>
+              <Button size="lg" className="gap-2 bg-purple-500 text-white hover:bg-purple-600">
+                <Video className="h-5 w-5" />
                 Garantir Meu Acesso
               </Button>
             </div>
@@ -130,20 +121,16 @@ const Community = () => {
 
         {/* Success Stories */}
         <div>
-          <h2 className="text-3xl font-bold text-foreground mb-8 text-center">
-            <Award className="w-8 h-8 inline-block mr-2 text-primary" />
+          <h2 className="mb-8 text-center text-3xl font-bold text-foreground">
+            <Award className="mr-2 inline-block h-8 w-8 text-primary" />
             Destaques de Sucesso
           </h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
             {testimonials.map((testimonial, index) => (
-              <Card key={index} className="p-6 border-primary/20">
-                <div className="text-5xl mb-4 text-center">{testimonial.avatar}</div>
-                <h3 className="font-bold text-foreground mb-2 text-center">
-                  {testimonial.name}
-                </h3>
-                <p className="text-muted-foreground text-center italic">
-                  "{testimonial.story}"
-                </p>
+              <Card key={index} className="border-primary/20 p-6">
+                <div className="mb-4 text-center text-5xl">{testimonial.avatar}</div>
+                <h3 className="mb-2 text-center font-bold text-foreground">{testimonial.name}</h3>
+                <p className="text-center italic text-muted-foreground">"{testimonial.story}"</p>
               </Card>
             ))}
           </div>

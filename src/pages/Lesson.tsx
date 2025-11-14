@@ -47,7 +47,7 @@ export default function Lesson() {
       if (!user) return;
 
       const moduleLessons = getModuleLessons(moduleNumber);
-      
+
       const { data } = await supabase
         .from('user_lessons')
         .select('is_completed')
@@ -87,15 +87,15 @@ export default function Lesson() {
     });
 
     toast.success('🎉 Aula concluída!', {
-      description: 'Parabéns por mais uma conquista!'
+      description: 'Parabéns por mais uma conquista!',
     });
   };
 
   if (loading || !lesson) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-background">
+      <div className="flex min-h-screen items-center justify-center bg-background">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-16 w-16 border-b-4 border-primary mx-auto mb-4"></div>
+          <div className="mx-auto mb-4 h-16 w-16 animate-spin rounded-full border-b-4 border-primary"></div>
           <p className="text-muted-foreground">Carregando aula...</p>
         </div>
       </div>
@@ -109,22 +109,22 @@ export default function Lesson() {
   return (
     <div className="min-h-screen bg-background text-foreground">
       {/* Header */}
-      <header className="sticky top-0 z-50 bg-background/95 backdrop-blur-lg border-b border-border">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-16">
+      <header className="sticky top-0 z-50 border-b border-border bg-background/95 backdrop-blur-lg">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="flex h-16 items-center justify-between">
             <div className="flex items-center gap-4">
-              <div className="w-10 h-10 rounded-full bg-gradient-to-br from-primary to-primary/80 flex items-center justify-center font-bold text-primary-foreground shadow-lg">
+              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-primary to-primary/80 font-bold text-primary-foreground shadow-lg">
                 CR
               </div>
-              <div className="hidden sm:flex items-center gap-2 text-sm text-muted-foreground">
-                <BookOpen className="w-4 h-4" />
+              <div className="hidden items-center gap-2 text-sm text-muted-foreground sm:flex">
+                <BookOpen className="h-4 w-4" />
                 <span>Módulo {moduleNumber}</span>
                 <span>•</span>
                 <span>Aula {lessonNumber}</span>
                 {lesson.isBonus && (
                   <>
                     <span>•</span>
-                    <span className="px-2 py-0.5 bg-purple-500/20 text-purple-400 rounded text-xs font-semibold">
+                    <span className="rounded bg-purple-500/20 px-2 py-0.5 text-xs font-semibold text-purple-400">
                       BÓNUS
                     </span>
                   </>
@@ -138,7 +138,7 @@ export default function Lesson() {
               onClick={() => navigate('/dashboard')}
               className="gap-2"
             >
-              <Home className="w-4 h-4" />
+              <Home className="h-4 w-4" />
               <span className="hidden sm:inline">Dashboard</span>
             </Button>
           </div>
@@ -146,8 +146,8 @@ export default function Lesson() {
       </header>
 
       {/* Main Content */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="grid grid-cols-1 lg:grid-cols-[1fr_400px] gap-8">
+      <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+        <div className="grid grid-cols-1 gap-8 lg:grid-cols-[1fr_400px]">
           {/* Video Section */}
           <div className="space-y-6">
             {/* Video Player */}
@@ -166,21 +166,19 @@ export default function Lesson() {
             )}
 
             {/* Lesson Info */}
-            <div className="bg-card rounded-xl p-6 border border-border">
-              <h1 className="text-3xl md:text-4xl font-bold mb-4 bg-gradient-to-r from-foreground to-muted-foreground bg-clip-text">
+            <div className="rounded-xl border border-border bg-card p-6">
+              <h1 className="mb-4 bg-gradient-to-r from-foreground to-muted-foreground bg-clip-text text-3xl font-bold md:text-4xl">
                 {lesson.title}
               </h1>
-              <p className="text-muted-foreground text-lg leading-relaxed">
-                {lesson.description}
-              </p>
+              <p className="text-lg leading-relaxed text-muted-foreground">{lesson.description}</p>
 
               {/* Progress Bar */}
               <div className="mt-6">
-                <div className="flex justify-between text-sm mb-2">
+                <div className="mb-2 flex justify-between text-sm">
                   <span className="text-muted-foreground">Progresso desta aula</span>
                   <span className="font-semibold text-foreground">{progress}%</span>
                 </div>
-                <div className="h-2 bg-muted rounded-full overflow-hidden">
+                <div className="h-2 overflow-hidden rounded-full bg-muted">
                   <div
                     className="h-full bg-gradient-to-r from-primary to-primary/80 transition-all duration-300"
                     style={{ width: `${progress}%` }}
@@ -190,23 +188,23 @@ export default function Lesson() {
             </div>
 
             {/* Navigation Buttons */}
-            <div className="flex gap-4 flex-wrap">
+            <div className="flex flex-wrap gap-4">
               {prevLesson ? (
                 <Button
                   variant="outline"
                   onClick={() => navigate(`/modulo/${prevLesson.module}/aula/${prevLesson.lesson}`)}
-                  className="flex-1 min-w-[200px] gap-2"
+                  className="min-w-[200px] flex-1 gap-2"
                 >
-                  <ChevronLeft className="w-4 h-4" />
+                  <ChevronLeft className="h-4 w-4" />
                   Aula Anterior
                 </Button>
               ) : (
                 <Button
                   variant="outline"
                   onClick={() => navigate('/dashboard')}
-                  className="flex-1 min-w-[200px] gap-2"
+                  className="min-w-[200px] flex-1 gap-2"
                 >
-                  <ChevronLeft className="w-4 h-4" />
+                  <ChevronLeft className="h-4 w-4" />
                   Voltar ao Início
                 </Button>
               )}
@@ -214,10 +212,10 @@ export default function Lesson() {
               {nextLesson && (
                 <Button
                   onClick={() => navigate(`/modulo/${nextLesson.module}/aula/${nextLesson.lesson}`)}
-                  className="flex-1 min-w-[200px] bg-primary hover:bg-primary/90 gap-2 font-semibold"
+                  className="min-w-[200px] flex-1 gap-2 bg-primary font-semibold hover:bg-primary/90"
                 >
                   Próxima Aula
-                  <ChevronRight className="w-4 h-4" />
+                  <ChevronRight className="h-4 w-4" />
                 </Button>
               )}
             </div>

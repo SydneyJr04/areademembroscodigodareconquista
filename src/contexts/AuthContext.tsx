@@ -7,7 +7,12 @@ interface AuthContextType {
   session: Session | null;
   loading: boolean;
   signIn: (email: string, password: string) => Promise<{ error: Error | null }>;
-  signUp: (email: string, password: string, fullName: string, whatsapp: string) => Promise<{ error: Error | null }>;
+  signUp: (
+    email: string,
+    password: string,
+    fullName: string,
+    whatsapp: string
+  ) => Promise<{ error: Error | null }>;
   signOut: () => Promise<void>;
 }
 
@@ -20,13 +25,13 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   useEffect(() => {
     // Set up auth state listener
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      (_event, session) => {
-        setSession(session);
-        setUser(session?.user ?? null);
-        setLoading(false);
-      }
-    );
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      setSession(session);
+      setUser(session?.user ?? null);
+      setLoading(false);
+    });
 
     // Check for existing session
     supabase.auth.getSession().then(({ data: { session } }) => {
@@ -48,7 +53,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   const signUp = async (email: string, password: string, fullName: string, whatsapp: string) => {
     const redirectUrl = `${window.location.origin}/login`;
-    
+
     const { error } = await supabase.auth.signUp({
       email,
       password,

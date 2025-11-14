@@ -5,11 +5,11 @@ import { Button } from './ui/button';
 import { toast } from 'sonner';
 
 const challenges = [
-  "Aplique a técnica do Módulo 2 e não envie mensagem por 48h",
-  "Assista 3 aulas esta semana e pratique o que aprendeu",
-  "Complete um módulo inteiro sem pausas",
+  'Aplique a técnica do Módulo 2 e não envie mensagem por 48h',
+  'Assista 3 aulas esta semana e pratique o que aprendeu',
+  'Complete um módulo inteiro sem pausas',
   "Aplique a 'Frase de 5 Palavras' numa conversa real",
-  "Faça o exercício de auto-reflexão do Módulo 1",
+  'Faça o exercício de auto-reflexão do Módulo 1',
 ];
 
 export const WeeklyChallengeCard = () => {
@@ -23,22 +23,18 @@ export const WeeklyChallengeCard = () => {
   };
 
   return (
-    <Card className="bg-gradient-to-br from-primary/10 to-background border-primary/30 p-6">
+    <Card className="border-primary/30 bg-gradient-to-br from-primary/10 to-background p-6">
       <div className="flex items-start gap-4">
-        <div className="bg-primary/20 p-3 rounded-lg">
-          <Target className="w-6 h-6 text-primary" />
+        <div className="rounded-lg bg-primary/20 p-3">
+          <Target className="h-6 w-6 text-primary" />
         </div>
         <div className="flex-1">
-          <h3 className="font-bold text-lg text-foreground mb-2">
-            🎯 Seu Desafio da Semana
-          </h3>
-          <p className="text-muted-foreground mb-4">
-            {currentChallenge}
-          </p>
+          <h3 className="mb-2 text-lg font-bold text-foreground">🎯 Seu Desafio da Semana</h3>
+          <p className="mb-4 text-muted-foreground">{currentChallenge}</p>
           <Button
             onClick={handleAccept}
             disabled={accepted}
-            variant={accepted ? "outline" : "default"}
+            variant={accepted ? 'outline' : 'default'}
             className="w-full sm:w-auto"
           >
             {accepted ? '✓ Desafio Aceite!' : 'Aceito o Desafio!'}

@@ -39,13 +39,10 @@ export const WelcomeModal = () => {
   const handleComplete = async () => {
     if (!user) return;
 
-    await supabase
-      .from('profiles')
-      .update({ first_login_completed: true })
-      .eq('id', user.id);
+    await supabase.from('profiles').update({ first_login_completed: true }).eq('id', user.id);
 
     setIsOpen(false);
-    
+
     if (checklist.startModule) {
       navigate('/dashboard');
     }
@@ -55,37 +52,32 @@ export const WelcomeModal = () => {
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
-      <DialogContent className="sm:max-w-[600px] bg-gradient-to-br from-background to-background/95 border-primary/20">
+      <DialogContent className="border-primary/20 bg-gradient-to-br from-background to-background/95 sm:max-w-[600px]">
         <DialogHeader>
-          <DialogTitle className="text-3xl font-bold text-center flex items-center justify-center gap-2">
-            <Sparkles className="w-8 h-8 text-primary animate-pulse" />
+          <DialogTitle className="flex items-center justify-center gap-2 text-center text-3xl font-bold">
+            <Sparkles className="h-8 w-8 animate-pulse text-primary" />
             Bem-vinda ao Código da Reconquista!
-            <Sparkles className="w-8 h-8 text-primary animate-pulse" />
+            <Sparkles className="h-8 w-8 animate-pulse text-primary" />
           </DialogTitle>
         </DialogHeader>
 
         <div className="space-y-6 py-4">
-          <p className="text-center text-muted-foreground text-lg">
+          <p className="text-center text-lg text-muted-foreground">
             Estás prestes a iniciar uma jornada transformadora. Vamos começar?
           </p>
 
-          <div className="space-y-4 bg-card/50 p-6 rounded-lg border border-border">
-            <h3 className="font-semibold text-lg mb-4">Passos Iniciais:</h3>
+          <div className="space-y-4 rounded-lg border border-border bg-card/50 p-6">
+            <h3 className="mb-4 text-lg font-semibold">Passos Iniciais:</h3>
 
-            <div className="flex items-start gap-3 p-3 rounded-lg hover:bg-accent/50 transition-colors">
+            <div className="flex items-start gap-3 rounded-lg p-3 transition-colors hover:bg-accent/50">
               <Checkbox
                 id="watchVideo"
                 checked={checklist.watchVideo}
-                onCheckedChange={(checked) =>
-                  setChecklist({ ...checklist, watchVideo: !!checked })
-                }
+                onCheckedChange={(checked) => setChecklist({ ...checklist, watchVideo: !!checked })}
               />
-              <label
-                htmlFor="watchVideo"
-                className="flex-1 cursor-pointer select-none space-y-1"
-              >
+              <label htmlFor="watchVideo" className="flex-1 cursor-pointer select-none space-y-1">
                 <div className="flex items-center gap-2">
-                  <Play className="w-4 h-4 text-primary" />
+                  <Play className="h-4 w-4 text-primary" />
                   <span className="font-medium">Assiste ao Vídeo de Boas-Vindas</span>
                 </div>
                 <p className="text-sm text-muted-foreground">
@@ -94,7 +86,7 @@ export const WelcomeModal = () => {
               </label>
             </div>
 
-            <div className="flex items-start gap-3 p-3 rounded-lg hover:bg-accent/50 transition-colors">
+            <div className="flex items-start gap-3 rounded-lg p-3 transition-colors hover:bg-accent/50">
               <Checkbox
                 id="downloadGuide"
                 checked={checklist.downloadGuide}
@@ -107,7 +99,7 @@ export const WelcomeModal = () => {
                 className="flex-1 cursor-pointer select-none space-y-1"
               >
                 <div className="flex items-center gap-2">
-                  <BookOpen className="w-4 h-4 text-primary" />
+                  <BookOpen className="h-4 w-4 text-primary" />
                   <span className="font-medium">Baixa o Guia de Início Rápido</span>
                 </div>
                 <p className="text-sm text-muted-foreground">
@@ -116,20 +108,15 @@ export const WelcomeModal = () => {
               </label>
             </div>
 
-            <div className="flex items-start gap-3 p-3 rounded-lg hover:bg-accent/50 transition-colors">
+            <div className="flex items-start gap-3 rounded-lg p-3 transition-colors hover:bg-accent/50">
               <Checkbox
                 id="joinGroup"
                 checked={checklist.joinGroup}
-                onCheckedChange={(checked) =>
-                  setChecklist({ ...checklist, joinGroup: !!checked })
-                }
+                onCheckedChange={(checked) => setChecklist({ ...checklist, joinGroup: !!checked })}
               />
-              <label
-                htmlFor="joinGroup"
-                className="flex-1 cursor-pointer select-none space-y-1"
-              >
+              <label htmlFor="joinGroup" className="flex-1 cursor-pointer select-none space-y-1">
                 <div className="flex items-center gap-2">
-                  <Users className="w-4 h-4 text-primary" />
+                  <Users className="h-4 w-4 text-primary" />
                   <span className="font-medium">Entra no Grupo de Suporte</span>
                 </div>
                 <p className="text-sm text-muted-foreground">
@@ -138,7 +125,7 @@ export const WelcomeModal = () => {
               </label>
             </div>
 
-            <div className="flex items-start gap-3 p-3 rounded-lg hover:bg-accent/50 transition-colors">
+            <div className="flex items-start gap-3 rounded-lg p-3 transition-colors hover:bg-accent/50">
               <Checkbox
                 id="startModule"
                 checked={checklist.startModule}
@@ -146,12 +133,9 @@ export const WelcomeModal = () => {
                   setChecklist({ ...checklist, startModule: !!checked })
                 }
               />
-              <label
-                htmlFor="startModule"
-                className="flex-1 cursor-pointer select-none space-y-1"
-              >
+              <label htmlFor="startModule" className="flex-1 cursor-pointer select-none space-y-1">
                 <div className="flex items-center gap-2">
-                  <Sparkles className="w-4 h-4 text-primary" />
+                  <Sparkles className="h-4 w-4 text-primary" />
                   <span className="font-medium">Começa o Módulo 1</span>
                 </div>
                 <p className="text-sm text-muted-foreground">
@@ -164,7 +148,7 @@ export const WelcomeModal = () => {
           <Button
             onClick={handleComplete}
             disabled={!allChecked}
-            className="w-full h-12 text-lg font-semibold"
+            className="h-12 w-full text-lg font-semibold"
             size="lg"
           >
             {allChecked ? '🚀 Começar Agora!' : '✓ Complete os passos acima'}

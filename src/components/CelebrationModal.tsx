@@ -10,13 +10,12 @@ interface CelebrationModalProps {
   onNextLesson?: () => void;
 }
 
-export const CelebrationModal = ({ 
-  isOpen, 
-  onClose, 
+export const CelebrationModal = ({
+  isOpen,
+  onClose,
   lessonTitle,
-  onNextLesson 
+  onNextLesson,
 }: CelebrationModalProps) => {
-  
   useEffect(() => {
     if (isOpen && typeof window !== 'undefined') {
       // Importar confetti dinamicamente
@@ -41,12 +40,12 @@ export const CelebrationModal = ({
           confetti.default({
             ...defaults,
             particleCount,
-            origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 }
+            origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 },
           });
           confetti.default({
             ...defaults,
             particleCount,
-            origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 }
+            origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 },
           });
         }, 250);
 
@@ -57,48 +56,33 @@ export const CelebrationModal = ({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-[500px] bg-gradient-to-br from-primary/10 via-background to-background border-primary/30">
-        <div className="text-center space-y-6 py-6">
+      <DialogContent className="border-primary/30 bg-gradient-to-br from-primary/10 via-background to-background sm:max-w-[500px]">
+        <div className="space-y-6 py-6 text-center">
           <div className="relative inline-block">
-            <Trophy className="w-24 h-24 text-primary mx-auto animate-bounce" />
-            <Sparkles className="w-8 h-8 text-yellow-400 absolute -top-2 -right-2 animate-pulse" />
-            <Star className="w-6 h-6 text-yellow-400 absolute -bottom-1 -left-1 animate-spin" />
+            <Trophy className="mx-auto h-24 w-24 animate-bounce text-primary" />
+            <Sparkles className="absolute -right-2 -top-2 h-8 w-8 animate-pulse text-yellow-400" />
+            <Star className="absolute -bottom-1 -left-1 h-6 w-6 animate-spin text-yellow-400" />
           </div>
 
           <div className="space-y-2">
-            <h2 className="text-3xl font-bold text-primary">
-              Parabéns! 🎉
-            </h2>
-            <p className="text-xl font-semibold">
-              Concluíste a aula:
-            </p>
-            <p className="text-lg text-muted-foreground italic">
-              "{lessonTitle}"
-            </p>
+            <h2 className="text-3xl font-bold text-primary">Parabéns! 🎉</h2>
+            <p className="text-xl font-semibold">Concluíste a aula:</p>
+            <p className="text-lg italic text-muted-foreground">"{lessonTitle}"</p>
           </div>
 
-          <div className="bg-card/50 p-6 rounded-lg border border-primary/20 space-y-3">
-            <p className="text-sm font-semibold text-primary">
-              ✨ Mais uma etapa vencida!
-            </p>
+          <div className="space-y-3 rounded-lg border border-primary/20 bg-card/50 p-6">
+            <p className="text-sm font-semibold text-primary">✨ Mais uma etapa vencida!</p>
             <p className="text-sm text-muted-foreground">
               Estás cada vez mais perto de reconquistar o que é teu. Continue assim!
             </p>
           </div>
 
           <div className="flex gap-3">
-            <Button
-              variant="outline"
-              onClick={onClose}
-              className="flex-1"
-            >
+            <Button variant="outline" onClick={onClose} className="flex-1">
               Ver Dashboard
             </Button>
             {onNextLesson && (
-              <Button
-                onClick={onNextLesson}
-                className="flex-1 bg-primary hover:bg-primary/90"
-              >
+              <Button onClick={onNextLesson} className="flex-1 bg-primary hover:bg-primary/90">
                 Próxima Aula →
               </Button>
             )}

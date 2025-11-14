@@ -28,22 +28,14 @@ export const MarkAsCompletedButton = ({ moduleId, lessonId }: MarkAsCompletedBut
 
   if (completed) {
     return (
-      <Button
-        disabled
-        className="w-full bg-green-500 hover:bg-green-500 text-white gap-2"
-      >
-        <Check className="w-5 h-5" />
-        ✓ Aula Concluída
+      <Button disabled className="w-full gap-2 bg-green-500 text-white hover:bg-green-500">
+        <Check className="h-5 w-5" />✓ Aula Concluída
       </Button>
     );
   }
 
   return (
-    <Button
-      onClick={handleMarkComplete}
-      disabled={isLoading}
-      className="w-full gap-2"
-    >
+    <Button onClick={handleMarkComplete} disabled={isLoading} className="w-full gap-2">
       {isLoading ? 'A marcar...' : 'Marcar como Concluída'}
     </Button>
   );

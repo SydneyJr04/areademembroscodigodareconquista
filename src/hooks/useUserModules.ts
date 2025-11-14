@@ -31,11 +31,11 @@ export const useUserModules = () => {
         .select('*')
         .eq('user_id', user.id)
         .order('module_number', { ascending: true });
-      
+
       if (!error && data) {
         setModules(data as UserModule[]);
       }
-      
+
       setLoading(false);
     };
 
@@ -73,10 +73,8 @@ export const useUserModules = () => {
       .eq('module_number', moduleNumber);
 
     if (!error) {
-      setModules(prev =>
-        prev.map(m =>
-          m.module_number === moduleNumber ? { ...m, is_completed: true } : m
-        )
+      setModules((prev) =>
+        prev.map((m) => (m.module_number === moduleNumber ? { ...m, is_completed: true } : m))
       );
     }
   };

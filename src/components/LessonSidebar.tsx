@@ -15,7 +15,7 @@ export function LessonSidebar({ moduleNumber }: LessonSidebarProps) {
   const params = useParams();
   const { user } = useAuth();
   const currentLessonId = parseInt(params.lessonId || '0');
-  
+
   const [completedLessons, setCompletedLessons] = useState<number[]>([]);
   const lessons = getModuleLessons(moduleNumber);
 
@@ -31,7 +31,7 @@ export function LessonSidebar({ moduleNumber }: LessonSidebarProps) {
         .eq('is_completed', true);
 
       if (data) {
-        const completed = data.map(d => d.lesson_id);
+        const completed = data.map((d) => d.lesson_id);
         setCompletedLessons(completed);
       }
     };
@@ -50,24 +50,24 @@ export function LessonSidebar({ moduleNumber }: LessonSidebarProps) {
   };
 
   const currentModule = moduleData[moduleNumber as keyof typeof moduleData];
-  const completedCount = lessons.filter(l => completedLessons.includes(l.lesson)).length;
+  const completedCount = lessons.filter((l) => completedLessons.includes(l.lesson)).length;
   const progressPercentage = Math.round((completedCount / lessons.length) * 100);
 
   return (
-    <Card className="bg-card border-border p-6 sticky top-24">
+    <Card className="sticky top-24 border-border bg-card p-6">
       {/* Header */}
       <div className="mb-6">
-        <h3 className="text-lg font-bold text-foreground mb-2">
+        <h3 className="mb-2 text-lg font-bold text-foreground">
           Módulo {moduleNumber}: {currentModule.title}
         </h3>
-        
+
         {/* Progress Bar */}
         <div className="mb-3">
-          <div className="flex justify-between text-xs text-muted-foreground mb-1">
+          <div className="mb-1 flex justify-between text-xs text-muted-foreground">
             <span>Progresso</span>
             <span className="font-semibold text-foreground">{progressPercentage}%</span>
           </div>
-          <div className="h-2 bg-muted rounded-full overflow-hidden">
+          <div className="h-2 overflow-hidden rounded-full bg-muted">
             <div
               className="h-full bg-gradient-to-r from-primary to-primary/80 transition-all duration-500"
               style={{ width: `${progressPercentage}%` }}
@@ -81,7 +81,7 @@ export function LessonSidebar({ moduleNumber }: LessonSidebarProps) {
       </div>
 
       {/* Lista de Aulas */}
-      <div className="space-y-2 max-h-[600px] overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-primary/20 scrollbar-track-transparent">
+      <div className="scrollbar-thin scrollbar-thumb-primary/20 scrollbar-track-transparent max-h-[600px] space-y-2 overflow-y-auto pr-2">
         {lessons.map((lesson, index) => {
           const isCompleted = completedLessons.includes(lesson.lesson);
           const isCurrent = lesson.lesson === currentLessonId;
@@ -90,40 +90,41 @@ export function LessonSidebar({ moduleNumber }: LessonSidebarProps) {
             <button
               key={lesson.lesson}
               onClick={() => navigate(`/modulo/${moduleNumber}/aula/${lesson.lesson}`)}
-              className={`
-                w-full text-left p-3 rounded-lg transition-all duration-200
-                ${isCurrent 
-                  ? 'bg-primary/20 border-2 border-primary shadow-lg' 
-                  : 'bg-background hover:bg-muted border-2 border-transparent'
-                }
-                ${isCompleted && !isCurrent ? 'opacity-70' : ''}
-              `}
+              className={`w-full rounded-lg p-3 text-left transition-all duration-200 ${
+                isCurrent
+                  ? 'border-2 border-primary bg-primary/20 shadow-lg'
+                  : 'border-2 border-transparent bg-background hover:bg-muted'
+              } ${isCompleted && !isCurrent ? 'opacity-70' : ''} `}
             >
               <div className="flex items-start gap-3">
                 {/* Ícone de Status */}
-                <div className="flex-shrink-0 mt-0.5">
+                <div className="mt-0.5 flex-shrink-0">
                   {isCompleted ? (
-                    <CheckCircle2 className="w-5 h-5 text-green-500" />
+                    <CheckCircle2 className="h-5 w-5 text-green-500" />
                   ) : isCurrent ? (
-                    <Play className="w-5 h-5 text-primary" fill="currentColor" />
+                    <Play className="h-5 w-5 text-primary" fill="currentColor" />
                   ) : (
-                    <Circle className="w-5 h-5 text-muted-foreground" />
+                    <Circle className="h-5 w-5 text-muted-foreground" />
                   )}
                 </div>
 
                 {/* Conteúdo */}
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-2 mb-1">
-                    <span className={`text-xs font-semibold ${isCurrent ? 'text-primary' : 'text-muted-foreground'}`}>
+                <div className="min-w-0 flex-1">
+                  <div className="mb-1 flex items-center gap-2">
+                    <span
+                      className={`text-xs font-semibold ${isCurrent ? 'text-primary' : 'text-muted-foreground'}`}
+                    >
                       Aula {index + 1}
                     </span>
                     {lesson.isBonus && (
-                      <span className="px-1.5 py-0.5 bg-purple-500/20 text-purple-400 text-[10px] font-bold rounded">
+                      <span className="rounded bg-purple-500/20 px-1.5 py-0.5 text-[10px] font-bold text-purple-400">
                         BÓNUS
                       </span>
                     )}
                   </div>
-                  <p className={`text-sm font-medium line-clamp-2 ${isCurrent ? 'text-foreground' : 'text-muted-foreground'}`}>
+                  <p
+                    className={`line-clamp-2 text-sm font-medium ${isCurrent ? 'text-foreground' : 'text-muted-foreground'}`}
+                  >
                     {lesson.title}
                   </p>
                 </div>

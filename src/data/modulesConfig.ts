@@ -17,9 +17,9 @@ export interface ModuleConfig {
 }
 
 export const getModulesConfig = (): ModuleConfig[] => {
-  return modulesUI.map(module => {
+  return modulesUI.map((module) => {
     const lessonsFromDB = getModuleLessons(module.id);
-    
+
     return {
       id: module.id,
       number: module.id,
@@ -36,9 +36,9 @@ export const getModulesConfig = (): ModuleConfig[] => {
 };
 
 export const getModuleBySlug = (slug: string) => {
-  return modulesUI.find(m => m.slug === slug);
+  return modulesUI.find((m) => m.slug === slug);
 };
 
 export const getModuleById = (id: number) => {
-  return modulesUI.find(m => m.id === id);
+  return modulesUI.find((m) => m.id === id);
 };

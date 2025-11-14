@@ -20,7 +20,7 @@ const products: Product[] = [
     price: 87,
     image: '📝',
     badge: 'POPULAR',
-    checkoutUrl: '#'
+    checkoutUrl: '#',
   },
   {
     id: 'guia-obediencia',
@@ -28,7 +28,7 @@ const products: Product[] = [
     description: 'Como fazer ele te dar atenção total',
     price: 97,
     image: '👑',
-    checkoutUrl: '#'
+    checkoutUrl: '#',
   },
   {
     id: 'respostas-130',
@@ -36,7 +36,7 @@ const products: Product[] = [
     description: 'Nunca mais fique sem saber o que responder',
     price: 67,
     image: '💬',
-    checkoutUrl: '#'
+    checkoutUrl: '#',
   },
   {
     id: 'deusa-cama',
@@ -45,29 +45,27 @@ const products: Product[] = [
     price: 597,
     image: '💋',
     badge: 'PREMIUM',
-    checkoutUrl: '#'
-  }
+    checkoutUrl: '#',
+  },
 ];
 
 export const UpsellCarousel = () => {
   return (
     <section className="space-y-6">
       <div>
-        <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-2">
+        <h2 className="mb-2 text-2xl font-bold text-foreground md:text-3xl">
           Recomendado Para Você
         </h2>
-        <p className="text-muted-foreground">
-          Ferramentas extras para acelerar sua reconquista
-        </p>
+        <p className="text-muted-foreground">Ferramentas extras para acelerar sua reconquista</p>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
         {products.map((product) => (
           <Card
             key={product.id}
-            className={`p-6 hover:scale-105 transition-all cursor-pointer ${
+            className={`cursor-pointer p-6 transition-all hover:scale-105 ${
               product.badge === 'PREMIUM'
-                ? 'bg-gradient-to-br from-purple-500/20 to-background border-purple-500/30'
+                ? 'border-purple-500/30 bg-gradient-to-br from-purple-500/20 to-background'
                 : 'hover:border-primary/50'
             }`}
           >
@@ -79,21 +77,17 @@ export const UpsellCarousel = () => {
                 {product.badge}
               </Badge>
             )}
-            
-            <div className="text-5xl mb-4 text-center">{product.image}</div>
-            
-            <h3 className="font-bold text-foreground mb-2 text-center min-h-[3rem]">
+
+            <div className="mb-4 text-center text-5xl">{product.image}</div>
+
+            <h3 className="mb-2 min-h-[3rem] text-center font-bold text-foreground">
               {product.title}
             </h3>
-            
-            <p className="text-sm text-muted-foreground mb-4 text-center">
-              {product.description}
-            </p>
-            
-            <p className="text-2xl font-bold text-primary text-center mb-4">
-              {product.price} MZN
-            </p>
-            
+
+            <p className="mb-4 text-center text-sm text-muted-foreground">{product.description}</p>
+
+            <p className="mb-4 text-center text-2xl font-bold text-primary">{product.price} MZN</p>
+
             <Button className="w-full" variant="outline">
               Quero Este Bônus
             </Button>

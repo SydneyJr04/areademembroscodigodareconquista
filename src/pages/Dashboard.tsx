@@ -22,7 +22,7 @@ const Dashboard = () => {
   const [userStats, setUserStats] = useState({
     globalProgress: 0,
     achievements: 0,
-    streak: 1
+    streak: 1,
   });
 
   // ═══════════════════════════════════════════════════════════
@@ -45,7 +45,7 @@ const Dashboard = () => {
           .select('full_name')
           .eq('id', user.id)
           .single();
-        
+
         setProfile(data);
       }
     };
@@ -72,7 +72,7 @@ const Dashboard = () => {
           setUserStats({
             globalProgress,
             achievements: stats.lessons_completed,
-            streak: stats.current_streak_days || 1
+            streak: stats.current_streak_days || 1,
           });
         }
       }
@@ -103,9 +103,9 @@ const Dashboard = () => {
   // ═══════════════════════════════════════════════════════════
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-background">
+      <div className="flex min-h-screen items-center justify-center bg-background">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-16 w-16 border-b-4 border-primary mx-auto mb-4"></div>
+          <div className="mx-auto mb-4 h-16 w-16 animate-spin rounded-full border-b-4 border-primary"></div>
           <p className="text-muted-foreground">A carregar...</p>
         </div>
       </div>
@@ -122,16 +122,16 @@ const Dashboard = () => {
   return (
     <div className="min-h-screen bg-background">
       <WelcomeModal />
-      
+
       {/* Top Navigation */}
-      <nav className="sticky top-0 z-50 bg-background/95 backdrop-blur-lg border-b border-border">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-16">
+      <nav className="sticky top-0 z-50 border-b border-border bg-background/95 backdrop-blur-lg">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="flex h-16 items-center justify-between">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-full bg-primary flex items-center justify-center font-bold text-primary-foreground">
+              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary font-bold text-primary-foreground">
                 CR
               </div>
-              <span className="font-bold text-lg hidden sm:inline">Código da Reconquista</span>
+              <span className="hidden text-lg font-bold sm:inline">Código da Reconquista</span>
             </div>
 
             <div className="flex items-center gap-2">
@@ -142,7 +142,7 @@ const Dashboard = () => {
                 onClick={() => navigate('/comunidade')}
                 className="gap-2"
               >
-                <Users className="w-4 h-4" />
+                <Users className="h-4 w-4" />
                 <span className="hidden sm:inline">Comunidade</span>
               </Button>
               <Button
@@ -151,16 +151,16 @@ const Dashboard = () => {
                 onClick={() => navigate('/meu-plano')}
                 className="gap-2"
               >
-                <User className="w-4 h-4" />
+                <User className="h-4 w-4" />
                 <span className="hidden sm:inline">Meu Plano</span>
               </Button>
               <Button
                 onClick={handleLogout}
                 variant="outline"
                 size="sm"
-                className="gap-2 hover:bg-destructive hover:text-destructive-foreground hover:border-destructive transition-all"
+                className="gap-2 transition-all hover:border-destructive hover:bg-destructive hover:text-destructive-foreground"
               >
-                <LogOut className="w-4 h-4" />
+                <LogOut className="h-4 w-4" />
                 <span className="hidden sm:inline">Sair</span>
               </Button>
             </div>
@@ -168,39 +168,43 @@ const Dashboard = () => {
         </div>
       </nav>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-12">
+      <div className="mx-auto max-w-7xl space-y-12 px-4 py-8 sm:px-6 lg:px-8">
         {/* Notification Prompt */}
         <div className="mb-6">
           <NotificationPrompt />
         </div>
 
         {/* Welcome Banner */}
-        <section className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-primary/10 via-secondary/10 to-background border border-border p-8 md:p-12">
+        <section className="relative overflow-hidden rounded-2xl border border-border bg-gradient-to-br from-primary/10 via-secondary/10 to-background p-8 md:p-12">
           <div className="relative z-10 max-w-3xl">
             <div className="mb-8">
               <ValueBreakdownCard />
             </div>
 
             <div className="mb-6 flex justify-center md:justify-start">
-              <img 
+              <img
                 src="https://pub-335435355c6548d7987945a540eca66b.r2.dev/LOGO%20NA%20PAGINA%20INICIAL%20DA%20AREA%20DE%20MEMBRO.webp"
                 alt="Código da Reconquista"
-                className="max-w-[220px] h-auto"
+                className="h-auto max-w-[220px]"
               />
             </div>
-            <h1 className="text-3xl md:text-4xl font-bold text-foreground mb-3">
-              Bem-vinda à tua virada de jogo, <span className="text-gradient-gold">{profile?.full_name || user?.email?.split('@')[0] || 'Aluna'}</span>!
+            <h1 className="mb-3 text-3xl font-bold text-foreground md:text-4xl">
+              Bem-vinda à tua virada de jogo,{' '}
+              <span className="text-gradient-gold">
+                {profile?.full_name || user?.email?.split('@')[0] || 'Aluna'}
+              </span>
+              !
             </h1>
-            <p className="text-lg text-muted-foreground mb-6">
+            <p className="mb-6 text-lg text-muted-foreground">
               Estás pronta para dominar a arte da reconquista? A tua jornada começa agora.
             </p>
-            
+
             {/* Progress Stats */}
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-              <div className="bg-background/50 backdrop-blur rounded-lg p-4 border border-border">
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+              <div className="rounded-lg border border-border bg-background/50 p-4 backdrop-blur">
                 <div className="flex items-center gap-3">
-                  <div className="bg-primary/20 p-2 rounded-lg">
-                    <TrendingUp className="w-5 h-5 text-primary" />
+                  <div className="rounded-lg bg-primary/20 p-2">
+                    <TrendingUp className="h-5 w-5 text-primary" />
                   </div>
                   <div>
                     <p className="text-sm text-muted-foreground">Progresso Global</p>
@@ -208,22 +212,24 @@ const Dashboard = () => {
                   </div>
                 </div>
               </div>
-              
-              <div className="bg-background/50 backdrop-blur rounded-lg p-4 border border-border">
+
+              <div className="rounded-lg border border-border bg-background/50 p-4 backdrop-blur">
                 <div className="flex items-center gap-3">
-                  <div className="bg-secondary/20 p-2 rounded-lg">
-                    <Award className="w-5 h-5 text-secondary" />
+                  <div className="rounded-lg bg-secondary/20 p-2">
+                    <Award className="h-5 w-5 text-secondary" />
                   </div>
                   <div>
                     <p className="text-sm text-muted-foreground">Aulas Completas</p>
-                    <p className="text-xl font-bold text-foreground">{userStats.achievements}/{getTotalLessons()}</p>
+                    <p className="text-xl font-bold text-foreground">
+                      {userStats.achievements}/{getTotalLessons()}
+                    </p>
                   </div>
                 </div>
               </div>
 
-              <div className="bg-background/50 backdrop-blur rounded-lg p-4 border border-border">
+              <div className="rounded-lg border border-border bg-background/50 p-4 backdrop-blur">
                 <div className="flex items-center gap-3">
-                  <div className="bg-primary/20 p-2 rounded-lg">
+                  <div className="rounded-lg bg-primary/20 p-2">
                     <span className="text-xl">🔥</span>
                   </div>
                   <div>
@@ -237,8 +243,8 @@ const Dashboard = () => {
             </div>
           </div>
 
-          <div className="absolute top-0 right-0 w-64 h-64 bg-primary/10 rounded-full blur-3xl" />
-          <div className="absolute bottom-0 left-0 w-64 h-64 bg-secondary/10 rounded-full blur-3xl" />
+          <div className="absolute right-0 top-0 h-64 w-64 rounded-full bg-primary/10 blur-3xl" />
+          <div className="absolute bottom-0 left-0 h-64 w-64 rounded-full bg-secondary/10 blur-3xl" />
         </section>
 
         {/* Weekly Challenge */}
@@ -247,7 +253,7 @@ const Dashboard = () => {
         {/* Main Course Carousel */}
         <section className="space-y-6">
           <div>
-            <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-2">
+            <h2 className="mb-2 text-2xl font-bold text-foreground md:text-3xl">
               O Código da Reconquista: A Jornada Completa
             </h2>
             <p className="text-muted-foreground">
@@ -256,9 +262,9 @@ const Dashboard = () => {
           </div>
 
           <div className="relative">
-            <div className="flex gap-6 overflow-x-auto pb-6 scrollbar-hide snap-x snap-mandatory">
+            <div className="scrollbar-hide flex snap-x snap-mandatory gap-6 overflow-x-auto pb-6">
               {modulesConfig.map((module) => (
-                <ModuleCard 
+                <ModuleCard
                   key={module.id}
                   module={module}
                   isReleased={true}
@@ -275,49 +281,45 @@ const Dashboard = () => {
         {/* Bonus Section */}
         <section className="space-y-6">
           <div>
-            <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-2">
+            <h2 className="mb-2 text-2xl font-bold text-foreground md:text-3xl">
               O Teu Arsenal Secreto (Bónus)
             </h2>
-            <p className="text-muted-foreground">
-              Ferramentas práticas para aplicar imediatamente
-            </p>
+            <p className="text-muted-foreground">Ferramentas práticas para aplicar imediatamente</p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="group relative overflow-hidden rounded-xl bg-gradient-to-br from-primary/20 to-background border border-primary/30 p-6 cursor-pointer hover:scale-105 transition-all">
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+            <div className="group relative cursor-pointer overflow-hidden rounded-xl border border-primary/30 bg-gradient-to-br from-primary/20 to-background p-6 transition-all hover:scale-105">
               <div className="flex items-start gap-4">
-                <div className="bg-primary/20 p-3 rounded-lg">
+                <div className="rounded-lg bg-primary/20 p-3">
                   <span className="text-3xl">📝</span>
                 </div>
                 <div className="flex-1">
-                  <h3 className="font-bold text-lg text-foreground mb-2">
+                  <h3 className="mb-2 text-lg font-bold text-foreground">
                     O Arsenal Secreto: 130 Frases Proibidas
                   </h3>
-                  <p className="text-sm text-muted-foreground mb-4">
+                  <p className="mb-4 text-sm text-muted-foreground">
                     Scripts prontos para cada situação
                   </p>
                   <Button variant="outline" size="sm" className="gap-2" disabled>
-                    <Lock className="w-4 h-4" />
+                    <Lock className="h-4 w-4" />
                     Em Breve
                   </Button>
                 </div>
               </div>
             </div>
 
-            <div className="group relative overflow-hidden rounded-xl bg-gradient-to-br from-secondary/20 to-background border border-secondary/30 p-6 cursor-pointer hover:scale-105 transition-all">
+            <div className="group relative cursor-pointer overflow-hidden rounded-xl border border-secondary/30 bg-gradient-to-br from-secondary/20 to-background p-6 transition-all hover:scale-105">
               <div className="flex items-start gap-4">
-                <div className="bg-secondary/20 p-3 rounded-lg">
+                <div className="rounded-lg bg-secondary/20 p-3">
                   <span className="text-3xl">💋</span>
                 </div>
                 <div className="flex-1">
-                  <h3 className="font-bold text-lg text-foreground mb-2">
-                    17 Beijos Que Viciam
-                  </h3>
-                  <p className="text-sm text-muted-foreground mb-4">
+                  <h3 className="mb-2 text-lg font-bold text-foreground">17 Beijos Que Viciam</h3>
+                  <p className="mb-4 text-sm text-muted-foreground">
                     Técnicas avançadas de sedução física
                   </p>
                   <Button variant="outline" size="sm" className="gap-2" disabled>
-                    <Lock className="w-4 h-4" />
+                    <Lock className="h-4 w-4" />
                     Em Breve
                   </Button>
                 </div>
@@ -329,31 +331,25 @@ const Dashboard = () => {
         {/* Advanced Section */}
         <section className="space-y-6">
           <div>
-            <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-2">
+            <h2 className="mb-2 text-2xl font-bold text-foreground md:text-3xl">
               O Próximo Nível (Avançado)
             </h2>
-            <p className="text-muted-foreground">
-              Conteúdo exclusivo para elevar o teu jogo
-            </p>
+            <p className="text-muted-foreground">Conteúdo exclusivo para elevar o teu jogo</p>
           </div>
 
-          <div className="relative overflow-hidden rounded-xl bg-gradient-to-br from-purple-500/20 to-background border border-purple-500/30 p-8">
-            <div className="flex items-center justify-between flex-wrap gap-6">
+          <div className="relative overflow-hidden rounded-xl border border-purple-500/30 bg-gradient-to-br from-purple-500/20 to-background p-8">
+            <div className="flex flex-wrap items-center justify-between gap-6">
               <div className="flex items-start gap-4">
-                <div className="bg-purple-500/20 p-3 rounded-lg">
+                <div className="rounded-lg bg-purple-500/20 p-3">
                   <span className="text-4xl">👑</span>
                 </div>
                 <div>
-                  <h3 className="font-bold text-xl text-foreground mb-2">
-                    A Deusa na Cama
-                  </h3>
-                  <p className="text-muted-foreground">
-                    Conteúdo premium de sedução avançada
-                  </p>
+                  <h3 className="mb-2 text-xl font-bold text-foreground">A Deusa na Cama</h3>
+                  <p className="text-muted-foreground">Conteúdo premium de sedução avançada</p>
                 </div>
               </div>
-              <Button className="bg-purple-500 hover:bg-purple-600 text-white gap-2" disabled>
-                <Lock className="w-4 h-4" />
+              <Button className="gap-2 bg-purple-500 text-white hover:bg-purple-600" disabled>
+                <Lock className="h-4 w-4" />
                 Desbloquear Agora
               </Button>
             </div>

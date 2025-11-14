@@ -1,11 +1,12 @@
-import { Bell, BellOff, X } from "lucide-react";
-import { Button } from "./ui/button";
-import { Card } from "./ui/card";
-import { usePushNotifications } from "@/hooks/usePushNotifications";
-import { useState } from "react";
+import { Bell, BellOff, X } from 'lucide-react';
+import { Button } from './ui/button';
+import { Card } from './ui/card';
+import { usePushNotifications } from '@/hooks/usePushNotifications';
+import { useState } from 'react';
 
 export const NotificationPrompt = () => {
-  const { isSupported, permission, requestPermission, isEnabled, unsubscribe } = usePushNotifications();
+  const { isSupported, permission, requestPermission, isEnabled, unsubscribe } =
+    usePushNotifications();
   const [dismissed, setDismissed] = useState(false);
 
   if (!isSupported || dismissed || permission === 'denied') {
@@ -14,12 +15,12 @@ export const NotificationPrompt = () => {
 
   if (isEnabled) {
     return (
-      <Card className="p-4 bg-primary/10 border-primary/20">
+      <Card className="border-primary/20 bg-primary/10 p-4">
         <div className="flex items-center justify-between gap-4">
           <div className="flex items-center gap-3">
             <Bell className="h-5 w-5 text-primary" />
             <div>
-              <p className="font-semibold text-sm">Notificações Ativas</p>
+              <p className="text-sm font-semibold">Notificações Ativas</p>
               <p className="text-xs text-muted-foreground">
                 Você receberá lembretes para continuar suas aulas
               </p>
@@ -39,17 +40,15 @@ export const NotificationPrompt = () => {
   }
 
   return (
-    <Card className="p-4 bg-gradient-to-r from-primary/20 to-accent/20 border-primary/30">
+    <Card className="border-primary/30 bg-gradient-to-r from-primary/20 to-accent/20 p-4">
       <div className="flex items-start justify-between gap-4">
-        <div className="flex items-start gap-3 flex-1">
-          <Bell className="h-5 w-5 text-primary mt-0.5 flex-shrink-0" />
+        <div className="flex flex-1 items-start gap-3">
+          <Bell className="mt-0.5 h-5 w-5 flex-shrink-0 text-primary" />
           <div className="flex-1">
-            <p className="font-semibold text-sm mb-1">
-              Não perca o ritmo! 🔥
-            </p>
-            <p className="text-xs text-muted-foreground mb-3">
-              Ative as notificações e receba lembretes para continuar suas aulas. 
-              A consistência é a chave para a reconquista!
+            <p className="mb-1 text-sm font-semibold">Não perca o ritmo! 🔥</p>
+            <p className="mb-3 text-xs text-muted-foreground">
+              Ative as notificações e receba lembretes para continuar suas aulas. A consistência é a
+              chave para a reconquista!
             </p>
             <div className="flex gap-2">
               <Button

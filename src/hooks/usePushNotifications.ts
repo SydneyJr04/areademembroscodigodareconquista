@@ -58,18 +58,19 @@ export const usePushNotifications = () => {
 
     try {
       const registration = await registerServiceWorker();
-      
+
       // Chave pública VAPID (você precisará gerar uma para produção)
-      const vapidPublicKey = 'BEl62iUYgUivxIkv69yViEuiBIa-Ib9-SkvMeAtA3LFgDzkrxZJjSgSnfckjBJuBkr3qBmYRTyF9s1PBmxv0YEk';
-      
+      const vapidPublicKey =
+        'BEl62iUYgUivxIkv69yViEuiBIa-Ib9-SkvMeAtA3LFgDzkrxZJjSgSnfckjBJuBkr3qBmYRTyF9s1PBmxv0YEk';
+
       const existingSubscription = await registration.pushManager.getSubscription();
-      
+
       let pushSubscription = existingSubscription;
-      
+
       if (!existingSubscription) {
         pushSubscription = await registration.pushManager.subscribe({
           userVisibleOnly: true,
-          applicationServerKey: urlBase64ToUint8Array(vapidPublicKey)
+          applicationServerKey: urlBase64ToUint8Array(vapidPublicKey),
         });
       }
 
@@ -77,15 +78,16 @@ export const usePushNotifications = () => {
 
       // Salvar subscription no banco
       if (pushSubscription) {
-        const { error } = await (supabase as any)
-          .from('push_subscriptions')
-          .upsert({
+        const { error } = await (supabase as any).from('push_subscriptions').upsert(
+          {
             user_id: user.id,
             subscription: pushSubscription.toJSON(),
-            endpoint: pushSubscription.endpoint
-          }, {
-            onConflict: 'user_id'
-          });
+            endpoint: pushSubscription.endpoint,
+          },
+          {
+            onConflict: 'user_id',
+          }
+        );
 
         if (error) {
           console.error('Erro ao salvar subscription:', error);
@@ -107,10 +109,7 @@ export const usePushNotifications = () => {
       setSubscription(null);
 
       // Remover do banco
-      await (supabase as any)
-        .from('push_subscriptions')
-        .delete()
-        .eq('user_id', user.id);
+      await (supabase as any).from('push_subscriptions').delete().eq('user_id', user.id);
 
       toast.success('Notificações desativadas');
     } catch (error) {
@@ -129,8 +128,8 @@ export const usePushNotifications = () => {
           userId: user.id,
           title: '👑 Código da Reconquista',
           body: 'Esta é uma notificação de teste!',
-          url: '/'
-        }
+          url: '/',
+        },
       });
 
       if (error) throw error;
@@ -148,16 +147,14 @@ export const usePushNotifications = () => {
     requestPermission,
     unsubscribe,
     sendTestNotification,
-    isEnabled: permission === 'granted' && !!subscription
+    isEnabled: permission === 'granted' && !!subscription,
   };
 };
 
 // Converter chave VAPID de base64 para Uint8Array
 function urlBase64ToUint8Array(base64String: string) {
-  const padding = '='.repeat((4 - base64String.length % 4) % 4);
-  const base64 = (base64String + padding)
-    .replace(/\-/g, '+')
-    .replace(/_/g, '/');
+  const padding = '='.repeat((4 - (base64String.length % 4)) % 4);
+  const base64 = (base64String + padding).replace(/\-/g, '+').replace(/_/g, '/');
 
   const rawData = window.atob(base64);
   const outputArray = new Uint8Array(rawData.length);

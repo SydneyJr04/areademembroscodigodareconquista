@@ -27,7 +27,7 @@ const Login = () => {
     setIsLoading(true);
 
     const { error } = await signIn(email, password);
-    
+
     if (!error) {
       toast.success('Bem-vinda de volta! 🎉');
       navigate('/dashboard');
@@ -42,10 +42,10 @@ const Login = () => {
     setIsLoading(true);
 
     // Fixed password for all signups
-    const fixedPassword = "Reconquista@2026";
-    
+    const fixedPassword = 'Reconquista@2026';
+
     const { error } = await signUp(email, fixedPassword, fullName, whatsapp);
-    
+
     if (!error) {
       toast.success('Conta criada! Agora faça login com seu e-mail e a senha Reconquista@2026');
       navigate('/login');
@@ -56,35 +56,35 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-background via-background to-background/95 relative overflow-hidden">
+    <div className="relative flex min-h-screen items-center justify-center overflow-hidden bg-gradient-to-br from-background via-background to-background/95">
       {/* Animated background elements */}
       <div className="absolute inset-0 opacity-30">
-        <div className="absolute top-20 left-10 w-72 h-72 bg-primary/20 rounded-full blur-3xl animate-pulse" />
-        <div className="absolute bottom-20 right-10 w-96 h-96 bg-secondary/20 rounded-full blur-3xl animate-pulse delay-1000" />
+        <div className="absolute left-10 top-20 h-72 w-72 animate-pulse rounded-full bg-primary/20 blur-3xl" />
+        <div className="absolute bottom-20 right-10 h-96 w-96 animate-pulse rounded-full bg-secondary/20 blur-3xl delay-1000" />
       </div>
 
-      <div className="relative z-10 w-full max-w-md px-6 animate-fade-in">
-        <div className="bg-card/80 backdrop-blur-xl rounded-2xl shadow-2xl border border-border/50 p-8 md:p-12">
+      <div className="relative z-10 w-full max-w-md animate-fade-in px-6">
+        <div className="rounded-2xl border border-border/50 bg-card/80 p-8 shadow-2xl backdrop-blur-xl md:p-12">
           {/* Logo */}
-          <div className="flex justify-center mb-8">
-            <img 
+          <div className="mb-8 flex justify-center">
+            <img
               src="https://pub-335435355c6548d7987945a540eca66b.r2.dev/LOGO%20DA%20PAGINA%20DE%20LOGIN.webp"
               alt="Código da Reconquista"
-              className="max-w-[280px] w-full h-auto animate-scale-in"
+              className="h-auto w-full max-w-[280px] animate-scale-in"
             />
           </div>
 
           {/* Title */}
-          <h1 className="text-2xl md:text-3xl font-bold text-center mb-2 text-foreground">
+          <h1 className="mb-2 text-center text-2xl font-bold text-foreground md:text-3xl">
             Acesso à Área de Membros
           </h1>
-          <p className="text-center text-muted-foreground mb-8">
+          <p className="mb-8 text-center text-muted-foreground">
             Inicia a tua jornada de reconquista
           </p>
 
           {/* Tabs for Login/Signup */}
           <Tabs defaultValue="signin" className="w-full">
-            <TabsList className="grid w-full grid-cols-2 mb-6">
+            <TabsList className="mb-6 grid w-full grid-cols-2">
               <TabsTrigger value="signin">Entrar</TabsTrigger>
               <TabsTrigger value="signup">Criar Conta</TabsTrigger>
             </TabsList>
@@ -102,7 +102,7 @@ const Login = () => {
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     required
-                    className="bg-background/50 border-border text-foreground placeholder:text-muted-foreground focus:border-primary transition-all"
+                    className="border-border bg-background/50 text-foreground transition-all placeholder:text-muted-foreground focus:border-primary"
                   />
                 </div>
 
@@ -117,14 +117,14 @@ const Login = () => {
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     required
-                    className="bg-background/50 border-border text-foreground placeholder:text-muted-foreground focus:border-primary transition-all"
+                    className="border-border bg-background/50 text-foreground transition-all placeholder:text-muted-foreground focus:border-primary"
                   />
                 </div>
 
                 <Button
                   type="submit"
                   disabled={isLoading}
-                  className="w-full bg-secondary hover:bg-secondary/90 text-secondary-foreground font-semibold text-lg py-6 rounded-xl shadow-lg hover:shadow-red transition-all hover:scale-[1.02]"
+                  className="hover:shadow-red w-full rounded-xl bg-secondary py-6 text-lg font-semibold text-secondary-foreground shadow-lg transition-all hover:scale-[1.02] hover:bg-secondary/90"
                 >
                   {isLoading ? 'A entrar...' : 'ENTRAR NA JORNADA'}
                 </Button>
@@ -144,7 +144,7 @@ const Login = () => {
                     value={fullName}
                     onChange={(e) => setFullName(e.target.value)}
                     required
-                    className="bg-background/50 border-border text-foreground placeholder:text-muted-foreground focus:border-primary transition-all"
+                    className="border-border bg-background/50 text-foreground transition-all placeholder:text-muted-foreground focus:border-primary"
                   />
                 </div>
 
@@ -159,7 +159,7 @@ const Login = () => {
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     required
-                    className="bg-background/50 border-border text-foreground placeholder:text-muted-foreground focus:border-primary transition-all"
+                    className="border-border bg-background/50 text-foreground transition-all placeholder:text-muted-foreground focus:border-primary"
                   />
                 </div>
 
@@ -174,20 +174,21 @@ const Login = () => {
                     value={whatsapp}
                     onChange={(e) => setWhatsapp(e.target.value)}
                     required
-                    className="bg-background/50 border-border text-foreground placeholder:text-muted-foreground focus:border-primary transition-all"
+                    className="border-border bg-background/50 text-foreground transition-all placeholder:text-muted-foreground focus:border-primary"
                   />
                 </div>
 
-                <div className="bg-muted/30 rounded-lg p-4">
-                  <p className="text-sm text-muted-foreground text-center">
-                    A senha inicial será: <span className="font-semibold text-foreground">Reconquista@2026</span>
+                <div className="rounded-lg bg-muted/30 p-4">
+                  <p className="text-center text-sm text-muted-foreground">
+                    A senha inicial será:{' '}
+                    <span className="font-semibold text-foreground">Reconquista@2026</span>
                   </p>
                 </div>
 
                 <Button
                   type="submit"
                   disabled={isLoading}
-                  className="w-full bg-secondary hover:bg-secondary/90 text-secondary-foreground font-semibold text-lg py-6 rounded-xl shadow-lg hover:shadow-red transition-all hover:scale-[1.02]"
+                  className="hover:shadow-red w-full rounded-xl bg-secondary py-6 text-lg font-semibold text-secondary-foreground shadow-lg transition-all hover:scale-[1.02] hover:bg-secondary/90"
                 >
                   {isLoading ? 'A criar conta...' : 'COMEÇAR A JORNADA'}
                 </Button>

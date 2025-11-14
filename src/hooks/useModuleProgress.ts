@@ -43,44 +43,45 @@ export const useModuleProgress = () => {
   const markLessonComplete = async (moduleId: number, lessonId: number) => {
     if (!user) return;
 
-    const { error } = await (supabase as any)
-      .from('user_lessons')
-      .upsert({
+    const { error } = await (supabase as any).from('user_lessons').upsert(
+      {
         user_id: user.id,
         module_number: moduleId,
         lesson_number: lessonId,
         is_completed: true,
         completed_at: new Date().toISOString(),
-      }, {
-        onConflict: 'user_id,module_number,lesson_number'
-      });
+      },
+      {
+        onConflict: 'user_id,module_number,lesson_number',
+      }
+    );
 
     if (!error) {
-      setProgress(prev => [
-        ...prev.filter(p => !(p.module_number === moduleId && p.lesson_number === lessonId)),
-        { 
+      setProgress((prev) => [
+        ...prev.filter((p) => !(p.module_number === moduleId && p.lesson_number === lessonId)),
+        {
           user_id: user.id,
-          module_number: moduleId, 
-          lesson_number: lessonId, 
+          module_number: moduleId,
+          lesson_number: lessonId,
           is_completed: true,
           completed_at: new Date().toISOString(),
           created_at: new Date().toISOString(),
           updated_at: new Date().toISOString(),
-          id: crypto.randomUUID()
-        }
+          id: crypto.randomUUID(),
+        },
       ]);
     }
   };
 
   const isLessonCompleted = (moduleId: number, lessonId: number) => {
     return progress.some(
-      p => p.module_number === moduleId && p.lesson_number === lessonId && p.is_completed
+      (p) => p.module_number === moduleId && p.lesson_number === lessonId && p.is_completed
     );
   };
 
   const getModuleProgress = (moduleId: number, totalLessons: number) => {
     const completedLessons = progress.filter(
-      p => p.module_number === moduleId && p.is_completed
+      (p) => p.module_number === moduleId && p.is_completed
     ).length;
     return totalLessons > 0 ? (completedLessons / totalLessons) * 100 : 0;
   };

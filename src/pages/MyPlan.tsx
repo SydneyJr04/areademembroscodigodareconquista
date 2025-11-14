@@ -26,8 +26,8 @@ const plans: Plan[] = [
       'Acesso a todos os 7 módulos',
       'Suporte via WhatsApp',
       'Materiais de apoio',
-      'Comunidade exclusiva'
-    ]
+      'Comunidade exclusiva',
+    ],
   },
   {
     id: 'mensal',
@@ -40,8 +40,8 @@ const plans: Plan[] = [
       'Suporte prioritário via WhatsApp',
       'Materiais de apoio',
       'Comunidade exclusiva',
-      'Desconto em upsells'
-    ]
+      'Desconto em upsells',
+    ],
   },
   {
     id: 'vitalicio',
@@ -56,9 +56,9 @@ const plans: Plan[] = [
       'Comunidade exclusiva',
       'Atualizações futuras gratuitas',
       'Bônus exclusivos',
-      '50% de desconto em lives de mentoria'
-    ]
-  }
+      '50% de desconto em lives de mentoria',
+    ],
+  },
 ];
 
 const MyPlan = () => {
@@ -81,7 +81,7 @@ const MyPlan = () => {
           .select('subscription_tier, subscription_expires_at')
           .eq('id', user.id)
           .maybeSingle();
-        
+
         if (data) {
           setCurrentTier(data.subscription_tier || 'mensal');
           setExpiresAt(data.subscription_expires_at);
@@ -94,7 +94,7 @@ const MyPlan = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-background">
+      <div className="flex min-h-screen items-center justify-center bg-background">
         <div className="animate-pulse text-foreground">A carregar...</div>
       </div>
     );
@@ -106,35 +106,29 @@ const MyPlan = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <nav className="sticky top-0 z-50 bg-background/95 backdrop-blur-lg border-b border-border">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-16">
-            <Button
-              variant="ghost"
-              onClick={() => navigate('/dashboard')}
-              className="gap-2"
-            >
+      <nav className="sticky top-0 z-50 border-b border-border bg-background/95 backdrop-blur-lg">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="flex h-16 items-center justify-between">
+            <Button variant="ghost" onClick={() => navigate('/dashboard')} className="gap-2">
               ← Voltar ao Dashboard
             </Button>
           </div>
         </div>
       </nav>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="text-center mb-12">
-          <h1 className="text-4xl font-bold text-foreground mb-4">
-            Meu Plano de Assinatura
-          </h1>
+      <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
+        <div className="mb-12 text-center">
+          <h1 className="mb-4 text-4xl font-bold text-foreground">Meu Plano de Assinatura</h1>
           {isExpired && (
-            <div className="bg-destructive/10 border border-destructive/30 rounded-lg p-4 max-w-2xl mx-auto">
-              <p className="text-destructive font-semibold">
+            <div className="mx-auto max-w-2xl rounded-lg border border-destructive/30 bg-destructive/10 p-4">
+              <p className="font-semibold text-destructive">
                 ⚠️ Seu plano expirou. Renove para continuar acessando o conteúdo!
               </p>
             </div>
           )}
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
           {plans.map((plan) => {
             const isCurrentPlan = plan.tier === currentTier;
             const isVitalicio = plan.tier === 'vitalicio';
@@ -142,18 +136,18 @@ const MyPlan = () => {
             return (
               <Card
                 key={plan.id}
-                className={`p-6 relative ${
+                className={`relative p-6 ${
                   isVitalicio
-                    ? 'bg-gradient-to-br from-primary/20 to-background border-primary'
+                    ? 'border-primary bg-gradient-to-br from-primary/20 to-background'
                     : isCurrentPlan
-                    ? 'border-green-500'
-                    : 'border-border'
+                      ? 'border-green-500'
+                      : 'border-border'
                 }`}
               >
                 {isVitalicio && (
-                  <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
-                    <div className="bg-primary px-4 py-1 rounded-full flex items-center gap-2">
-                      <Crown className="w-4 h-4" />
+                  <div className="absolute -top-4 left-1/2 -translate-x-1/2 transform">
+                    <div className="flex items-center gap-2 rounded-full bg-primary px-4 py-1">
+                      <Crown className="h-4 w-4" />
                       <span className="text-sm font-bold">RECOMENDADO</span>
                     </div>
                   </div>
@@ -161,28 +155,22 @@ const MyPlan = () => {
 
                 {isCurrentPlan && (
                   <div className="absolute -top-4 right-4">
-                    <div className="bg-green-500 px-3 py-1 rounded-full text-sm font-bold">
+                    <div className="rounded-full bg-green-500 px-3 py-1 text-sm font-bold">
                       SEU PLANO
                     </div>
                   </div>
                 )}
 
-                <div className="text-center mb-6">
-                  <h3 className="text-2xl font-bold text-foreground mb-2">
-                    {plan.name}
-                  </h3>
-                  <p className="text-muted-foreground text-sm mb-4">
-                    {plan.duration}
-                  </p>
-                  <p className="text-4xl font-bold text-primary">
-                    {plan.price} MZN
-                  </p>
+                <div className="mb-6 text-center">
+                  <h3 className="mb-2 text-2xl font-bold text-foreground">{plan.name}</h3>
+                  <p className="mb-4 text-sm text-muted-foreground">{plan.duration}</p>
+                  <p className="text-4xl font-bold text-primary">{plan.price} MZN</p>
                 </div>
 
-                <ul className="space-y-3 mb-6">
+                <ul className="mb-6 space-y-3">
                   {plan.benefits.map((benefit, index) => (
                     <li key={index} className="flex items-start gap-2">
-                      <Check className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" />
+                      <Check className="mt-0.5 h-5 w-5 flex-shrink-0 text-green-500" />
                       <span className="text-sm text-muted-foreground">{benefit}</span>
                     </li>
                   ))}
@@ -196,8 +184,8 @@ const MyPlan = () => {
                   {isCurrentPlan && !isExpired
                     ? 'Plano Ativo'
                     : isCurrentPlan && isExpired
-                    ? 'Renovar Plano'
-                    : 'Fazer Upgrade'}
+                      ? 'Renovar Plano'
+                      : 'Fazer Upgrade'}
                 </Button>
               </Card>
             );

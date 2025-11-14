@@ -100,7 +100,7 @@ All colors MUST be HSL.
   /* ═══════════════════════════════════════════════════════════
      SCROLLBAR CUSTOMIZADA
      ═══════════════════════════════════════════════════════════ */
-  
+
   /* Firefox */
   * {
     scrollbar-width: thin;
@@ -154,7 +154,7 @@ All colors MUST be HSL.
   /* ═══════════════════════════════════════════════════════════
      PLYR CUSTOMIZATION
      ═══════════════════════════════════════════════════════════ */
-  
+
   :root {
     --plyr-color-main: hsl(var(--primary));
     --plyr-video-control-background-hover: hsl(var(--secondary));
@@ -178,7 +178,7 @@ All colors MUST be HSL.
   /* ═══════════════════════════════════════════════════════════
      ANIMAÇÕES PERSONALIZADAS
      ═══════════════════════════════════════════════════════════ */
-  
+
   @keyframes fade-in {
     from {
       opacity: 0;
@@ -222,7 +222,8 @@ All colors MUST be HSL.
   }
 
   @keyframes bounce-subtle {
-    0%, 100% {
+    0%,
+    100% {
       transform: translateY(0);
     }
     50% {
@@ -240,7 +241,8 @@ All colors MUST be HSL.
   }
 
   @keyframes pulse-glow {
-    0%, 100% {
+    0%,
+    100% {
       box-shadow: 0 0 20px hsl(var(--primary) / 0.3);
     }
     50% {
@@ -287,23 +289,23 @@ All colors MUST be HSL.
   /* ═══════════════════════════════════════════════════════════
      SKELETON LOADERS
      ═══════════════════════════════════════════════════════════ */
-  
+
   .skeleton {
-    @apply bg-muted rounded animate-pulse;
+    @apply animate-pulse rounded bg-muted;
   }
 
   .skeleton-text {
-    @apply h-4 bg-muted rounded animate-pulse;
+    @apply h-4 animate-pulse rounded bg-muted;
   }
 
   .skeleton-circle {
-    @apply rounded-full bg-muted animate-pulse;
+    @apply animate-pulse rounded-full bg-muted;
   }
 
   /* ═══════════════════════════════════════════════════════════
      SELECTION & FOCUS
      ═══════════════════════════════════════════════════════════ */
-  
+
   ::selection {
     background: hsl(var(--primary) / 0.3);
     color: hsl(var(--foreground));
@@ -317,7 +319,7 @@ All colors MUST be HSL.
   /* ═══════════════════════════════════════════════════════════
      BACKDROP BLUR UTILITIES
      ═══════════════════════════════════════════════════════════ */
-  
+
   .backdrop-blur-premium {
     backdrop-filter: blur(12px) saturate(180%);
     -webkit-backdrop-filter: blur(12px) saturate(180%);
@@ -328,7 +330,7 @@ All colors MUST be HSL.
   /* ═══════════════════════════════════════════════════════════
      HOVER EFFECTS
      ═══════════════════════════════════════════════════════════ */
-  
+
   .hover-lift {
     @apply transition-all duration-300 hover:scale-105 hover:shadow-2xl;
   }
@@ -342,7 +344,7 @@ All colors MUST be HSL.
   }
 
   .netflix-hover {
-    @apply transition-all duration-300 hover:brightness-110 hover:scale-105;
+    @apply transition-all duration-300 hover:scale-105 hover:brightness-110;
   }
 
   .card-hover {
@@ -352,7 +354,7 @@ All colors MUST be HSL.
   /* ═══════════════════════════════════════════════════════════
      GRADIENTS
      ═══════════════════════════════════════════════════════════ */
-  
+
   .gradient-gold {
     background: linear-gradient(135deg, hsl(51 100% 60%), hsl(51 100% 40%));
   }
@@ -366,17 +368,13 @@ All colors MUST be HSL.
   }
 
   .gradient-overlay {
-    background: linear-gradient(
-      to bottom,
-      transparent 0%,
-      hsl(var(--background) / 0.8) 100%
-    );
+    background: linear-gradient(to bottom, transparent 0%, hsl(var(--background) / 0.8) 100%);
   }
 
   /* ═══════════════════════════════════════════════════════════
      TEXT GRADIENTS
      ═══════════════════════════════════════════════════════════ */
-  
+
   .text-gradient-gold {
     background: linear-gradient(135deg, hsl(51 100% 60%), hsl(51 100% 40%));
     -webkit-background-clip: text;
@@ -401,10 +399,11 @@ All colors MUST be HSL.
   /* ═══════════════════════════════════════════════════════════
      SHADOWS
      ═══════════════════════════════════════════════════════════ */
-  
+
   .gold-glow {
-    box-shadow: 0 0 20px hsl(var(--gold-glow) / 0.5), 
-                0 0 40px hsl(var(--gold-glow) / 0.3);
+    box-shadow:
+      0 0 20px hsl(var(--gold-glow) / 0.5),
+      0 0 40px hsl(var(--gold-glow) / 0.3);
   }
 
   .shadow-gold {
@@ -416,14 +415,15 @@ All colors MUST be HSL.
   }
 
   .shadow-premium {
-    box-shadow: 0 20px 60px hsl(0 0% 0% / 0.5),
-                0 0 40px hsl(var(--primary) / 0.1);
+    box-shadow:
+      0 20px 60px hsl(0 0% 0% / 0.5),
+      0 0 40px hsl(var(--primary) / 0.1);
   }
 
   /* ═══════════════════════════════════════════════════════════
      GLASS MORPHISM
      ═══════════════════════════════════════════════════════════ */
-  
+
   .glass {
     background: hsl(var(--card) / 0.7);
     backdrop-filter: blur(10px);
@@ -441,7 +441,7 @@ All colors MUST be HSL.
   /* ═══════════════════════════════════════════════════════════
      TRANSITIONS
      ═══════════════════════════════════════════════════════════ */
-  
+
   .transition-smooth {
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   }
@@ -453,7 +453,7 @@ All colors MUST be HSL.
   /* ═══════════════════════════════════════════════════════════
      SNAP SCROLL
      ═══════════════════════════════════════════════════════════ */
-  
+
   .snap-x {
     scroll-snap-type: x mandatory;
     scroll-behavior: smooth;
@@ -475,7 +475,7 @@ All colors MUST be HSL.
   /* ═══════════════════════════════════════════════════════════
      ASPECT RATIOS CUSTOMIZADOS
      ═══════════════════════════════════════════════════════════ */
-  
+
   .aspect-video-wide {
     aspect-ratio: 21 / 9;
   }
@@ -491,7 +491,7 @@ All colors MUST be HSL.
   /* ═══════════════════════════════════════════════════════════
      LINE CLAMP UTILITIES
      ═══════════════════════════════════════════════════════════ */
-  
+
   .line-clamp-1 {
     display: -webkit-box;
     -webkit-line-clamp: 1;

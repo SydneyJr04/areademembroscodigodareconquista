@@ -30,34 +30,23 @@ const materials: Material[] = [
 export const MaterialsSection = () => {
   return (
     <div className="mt-8">
-      <h3 className="text-xl font-bold text-foreground mb-4">
-        📚 Materiais de Apoio
-      </h3>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      <h3 className="mb-4 text-xl font-bold text-foreground">📚 Materiais de Apoio</h3>
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
         {materials.map((material, index) => (
-          <Card key={index} className="p-4 hover:border-primary/50 transition-colors">
+          <Card key={index} className="p-4 transition-colors hover:border-primary/50">
             <div className="flex items-start gap-3">
-              <div className="bg-primary/20 p-2 rounded-lg">
+              <div className="rounded-lg bg-primary/20 p-2">
                 {material.type === 'pdf' ? (
-                  <FileText className="w-5 h-5 text-primary" />
+                  <FileText className="h-5 w-5 text-primary" />
                 ) : (
-                  <Headphones className="w-5 h-5 text-primary" />
+                  <Headphones className="h-5 w-5 text-primary" />
                 )}
               </div>
               <div className="flex-1">
-                <h4 className="font-semibold text-foreground mb-1">
-                  {material.title}
-                </h4>
-                <p className="text-sm text-muted-foreground mb-3">
-                  {material.description}
-                </p>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className="gap-2"
-                  disabled={!material.url}
-                >
-                  <Download className="w-4 h-4" />
+                <h4 className="mb-1 font-semibold text-foreground">{material.title}</h4>
+                <p className="mb-3 text-sm text-muted-foreground">{material.description}</p>
+                <Button variant="outline" size="sm" className="gap-2" disabled={!material.url}>
+                  <Download className="h-4 w-4" />
                   {material.url ? 'Baixar' : 'Em breve'}
                 </Button>
               </div>
