@@ -4,8 +4,6 @@ import { useAuth } from '@/contexts/AuthContext';
 import { getModulesConfig } from '@/data/modulesConfig';
 import { getTotalLessons } from '@/data/lessons';
 import { ModuleCard } from '@/components/ModuleCard';
-import { JourneyMap } from '@/components/JourneyMap';
-import { useUserModules } from '@/hooks/useUserModules';
 import { WeeklyChallengeCard } from '@/components/WeeklyChallengeCard';
 import { UpsellCarousel } from '@/components/UpsellCarousel';
 import { ThemeToggle } from '@/components/ThemeToggle';
@@ -21,7 +19,6 @@ const Dashboard = () => {
   const { user, loading, signOut } = useAuth();
   const navigate = useNavigate();
   const [profile, setProfile] = useState<{ full_name?: string } | null>(null);
-  const { modules: userModules, loading: modulesLoading } = useUserModules();
   const [userStats, setUserStats] = useState({
     globalProgress: 0,
     achievements: 0,
@@ -33,7 +30,6 @@ const Dashboard = () => {
   // ═══════════════════════════════════════════════════════════
   useEffect(() => {
     if (!loading && !user) {
-      console.log('⚠️ [Dashboard] Usuário não autenticado, redirecionando...');
       navigate('/login');
     }
   }, [user, loading, navigate]);
@@ -44,21 +40,13 @@ const Dashboard = () => {
   useEffect(() => {
     const fetchProfile = async () => {
       if (user) {
-        try {
-          const { data, error } = await supabase
-            .from('profiles')
-            .select('full_name')
-            .eq('id', user.id)
-            .single();
-          
-          if (error) {
-            console.error('❌ [Dashboard] Erro ao carregar perfil:', error);
-          } else {
-            setProfile(data);
-          }
-        } catch (error) {
-          console.error('❌ [Dashboard] Exceção ao carregar perfil:', error);
-        }
+        const { data } = await supabase
+          .from('profiles')
+          .select('full_name')
+          .eq('id', user.id)
+          .single();
+        
+        setProfile(data);
       }
     };
 
@@ -71,25 +59,21 @@ const Dashboard = () => {
   useEffect(() => {
     const fetchUserStats = async () => {
       if (user) {
-        try {
-          const { data: stats } = await supabase
-            .from('user_stats')
-            .select('*')
-            .eq('user_id', user.id)
-            .single();
+        const { data: stats } = await supabase
+          .from('user_stats')
+          .select('*')
+          .eq('user_id', user.id)
+          .single();
 
-          if (stats) {
-            const totalLessons = getTotalLessons();
-            const globalProgress = Math.round((stats.lessons_completed / totalLessons) * 100);
+        if (stats) {
+          const totalLessons = getTotalLessons();
+          const globalProgress = Math.round((stats.lessons_completed / totalLessons) * 100);
 
-            setUserStats({
-              globalProgress,
-              achievements: stats.lessons_completed,
-              streak: stats.current_streak_days || 1
-            });
-          }
-        } catch (error) {
-          console.error('❌ [Dashboard] Erro ao carregar estatísticas:', error);
+          setUserStats({
+            globalProgress,
+            achievements: stats.lessons_completed,
+            streak: stats.current_streak_days || 1
+          });
         }
       }
     };
@@ -98,27 +82,10 @@ const Dashboard = () => {
   }, [user]);
 
   // ═══════════════════════════════════════════════════════════
-  // HANDLER: CLICK NO MÓDULO
+  // HANDLER: CLICK NO MÓDULO (SIMPLIFICADO - SEM VERIFICAÇÃO)
   // ═══════════════════════════════════════════════════════════
   const handleModuleClick = (moduleNumber: number) => {
-    console.log(`🔍 [Dashboard] Click no módulo ${moduleNumber}`);
-
-    const userModule = userModules.find(m => m.module_number === moduleNumber);
-    
-    // Verificar se o módulo está liberado
-    if (!userModule?.is_released) {
-      const releaseDate = new Date(userModule?.release_date || '');
-      const daysRemaining = Math.ceil((releaseDate.getTime() - Date.now()) / (1000 * 60 * 60 * 24));
-      
-      toast.error(
-        `🔒 Este módulo será liberado em ${releaseDate.toLocaleDateString('pt-PT')} (${daysRemaining} ${daysRemaining === 1 ? 'dia' : 'dias'})`,
-        { duration: 4000 }
-      );
-      return;
-    }
-    
-    // Navegar para a primeira aula do módulo
-    console.log(`✅ [Dashboard] Navegando para /modulo/${moduleNumber}/aula/1`);
+    console.log(`✅ [Dashboard] Navegando para módulo ${moduleNumber}`);
     navigate(`/modulo/${moduleNumber}/aula/1`);
   };
 
@@ -126,20 +93,15 @@ const Dashboard = () => {
   // HANDLER: LOGOUT
   // ═══════════════════════════════════════════════════════════
   const handleLogout = async () => {
-    try {
-      await signOut();
-      toast.success('Até breve! 👋');
-      navigate('/login');
-    } catch (error) {
-      console.error('❌ [Dashboard] Erro ao fazer logout:', error);
-      toast.error('Erro ao sair. Tente novamente.');
-    }
+    await signOut();
+    toast.success('Até breve! 👋');
+    navigate('/login');
   };
 
   // ═══════════════════════════════════════════════════════════
   // LOADING STATE
   // ═══════════════════════════════════════════════════════════
-  if (loading || modulesLoading) {
+  if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-background">
         <div className="text-center">
@@ -153,18 +115,9 @@ const Dashboard = () => {
   if (!user) return null;
 
   // ═══════════════════════════════════════════════════════════
-  // PREPARAR MÓDULOS COM STATUS
+  // MÓDULOS (TODOS LIBERADOS)
   // ═══════════════════════════════════════════════════════════
   const modulesConfig = getModulesConfig();
-  const modulesWithStatus = modulesConfig.map(module => {
-    const userModule = userModules.find(m => m.module_number === module.number);
-    
-    return {
-      ...module,
-      isReleased: userModule?.is_released || false,
-      releaseDate: userModule?.release_date,
-    };
-  });
 
   return (
     <div className="min-h-screen bg-background">
@@ -284,7 +237,6 @@ const Dashboard = () => {
             </div>
           </div>
 
-          {/* Decorative elements */}
           <div className="absolute top-0 right-0 w-64 h-64 bg-primary/10 rounded-full blur-3xl" />
           <div className="absolute bottom-0 left-0 w-64 h-64 bg-secondary/10 rounded-full blur-3xl" />
         </section>
@@ -299,18 +251,17 @@ const Dashboard = () => {
               O Código da Reconquista: A Jornada Completa
             </h2>
             <p className="text-muted-foreground">
-              {modulesConfig.length} módulos transformadores para dominar a arte da reconquista
+              {modulesConfig.length} módulos transformadores • Todos liberados! 🎉
             </p>
           </div>
 
           <div className="relative">
             <div className="flex gap-6 overflow-x-auto pb-6 scrollbar-hide snap-x snap-mandatory">
-              {modulesWithStatus.map((module) => (
+              {modulesConfig.map((module) => (
                 <ModuleCard 
                   key={module.id}
                   module={module}
-                  isReleased={module.isReleased}
-                  releaseDate={module.releaseDate}
+                  isReleased={true}
                   onClick={() => handleModuleClick(module.number)}
                 />
               ))}
@@ -397,7 +348,7 @@ const Dashboard = () => {
                     A Deusa na Cama
                   </h3>
                   <p className="text-muted-foreground">
-                    Módulo premium de sedução avançada
+                    Conteúdo premium de sedução avançada
                   </p>
                 </div>
               </div>
@@ -409,23 +360,6 @@ const Dashboard = () => {
           </div>
         </section>
       </div>
-
-      {/* Debug Info */}
-      {process.env.NODE_ENV === 'development' && (
-        <div className="fixed bottom-4 left-4 bg-black/90 text-white p-4 rounded-lg text-xs max-w-sm z-50">
-          <p className="font-bold mb-2">🔍 Dashboard Debug</p>
-          <p>User: {user?.email}</p>
-          <p>Modules Released: {userModules.filter(m => m.is_released).length}/{userModules.length}</p>
-          <p>Total Modules: {modulesConfig.length}</p>
-          <p>Global Progress: {userStats.globalProgress}%</p>
-          <button
-            onClick={() => console.log('Modules:', modulesWithStatus)}
-            className="mt-2 px-2 py-1 bg-primary rounded text-xs"
-          >
-            Log Modules
-          </button>
-        </div>
-      )}
     </div>
   );
 };
