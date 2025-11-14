@@ -14,6 +14,7 @@ import { toast } from 'sonner';
 import { supabase } from '@/integrations/supabase/client';
 import { WelcomeModal } from '@/components/WelcomeModal';
 import { ValueBreakdownCard } from '@/components/ValueBreakdownCard';
+import { NotificationPrompt } from '@/components/NotificationPrompt';
 
 const Dashboard = () => {
   const { user, loading, signOut } = useAuth();
@@ -74,6 +75,7 @@ const Dashboard = () => {
   return (
     <div className="min-h-screen bg-background">
       <WelcomeModal />
+      
       {/* Top Navigation */}
       <nav className="sticky top-0 z-50 bg-background/95 backdrop-blur-lg border-b border-border">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -120,6 +122,11 @@ const Dashboard = () => {
       </nav>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-12">
+        {/* Notification Prompt */}
+        <div className="mb-6">
+          <NotificationPrompt />
+        </div>
+
         {/* Welcome Banner */}
         <section className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-primary/10 via-secondary/10 to-background border border-border p-8 md:p-12">
           <div className="relative z-10 max-w-3xl">
