@@ -1,5 +1,7 @@
-import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+"use client";
 
+import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+// ... resto do códigoimport { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 type Theme = 'light' | 'dark';
 
 interface ThemeContextType {
