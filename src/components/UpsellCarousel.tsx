@@ -21,7 +21,7 @@ const products: Product[] = [
     description: 'Aprende as frases secretas que o fazem dizer "sim" a tudo o que pedes. Faz ele te obedecer... achando que a ideia foi dele.',
     price: 87,
     image: 'https://pub-335435355c6548d7987945a540eca66b.r2.dev/GUIA%20DA%20OBEDI%C3%8ANCIA%20-%20Estrat%C3%A9gias%20Para%20Manipular%20Os%20Homens.webp',
-    badge: 'MAIS COMPRADO'
+    badge: 'MAIS COMPRADO',
     checkoutUrl: 'https://pay.lojou.app/p/4V8pY',
   },
   {
@@ -30,7 +30,7 @@ const products: Product[] = [
     description: 'Ele reapareceu? Não sabes o que dizer? Assume o controlo de qualquer conversa e tenha sempre a resposta perfeita na ponta da língua.',
     price: 97,
     image: 'https://pub-335435355c6548d7987945a540eca66b.r2.dev/130%20Respostas%20Infal%C3%ADveis%20%E2%80%93%20O%20Que%20Dizer%20Quando%20Ele%20Falar%20Qualquer%20Coisa.webp',
-    badge: 'RECOMENDADO'
+    badge: 'RECOMENDADO',
     checkoutUrl: 'https://pay.lojou.app/p/mx0qC',
   },
   {
