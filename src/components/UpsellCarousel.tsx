@@ -16,38 +16,40 @@ interface Product {
 
 const products: Product[] = [
   {
-    id: 'frases-130',
-    title: '130 Frases Para Deixar O Gajo Caidinho Por Ti',
-    description: 'Scripts prontos para cada situação',
-    price: 87,
-    image: '📝',
-    badge: 'POPULAR',
-    checkoutUrl: 'https://pay.lojou.app/p/4L5Zt',
-  },
-  {
     id: 'guia-obediencia',
-    title: 'Guia da Obediência',
-    description: 'Como fazer ele te dar atenção total',
+    title: 'GUIA DA OBEDIÊNCIA - Estratégias Para Manipular Os Homens',
+    description: 'Aprende as frases secretas que o fazem dizer "sim" a tudo o que pedes. Faz ele te obedecer... achando que a ideia foi dele.',
     price: 87,
-    image: '👑',
+    image: 'https://pub-335435355c6548d7987945a540eca66b.r2.dev/GUIA%20DA%20OBEDI%C3%8ANCIA%20-%20Estrat%C3%A9gias%20Para%20Manipular%20Os%20Homens.webp',
+    badge: 'MAIS COMPRADO'
     checkoutUrl: 'https://pay.lojou.app/p/4V8pY',
   },
   {
     id: 'respostas-130',
-    title: '130 Respostas Infalíveis',
-    description: 'Nunca mais fique sem saber o que responder',
-    price: 67,
-    image: '💬',
+    title: '130 Respostas Infalíveis – O Que Dizer Quando Ele Falar Qualquer Coisa',
+    description: 'Ele reapareceu? Não sabes o que dizer? Assume o controlo de qualquer conversa e tenha sempre a resposta perfeita na ponta da língua.',
+    price: 97,
+    image: 'https://pub-335435355c6548d7987945a540eca66b.r2.dev/130%20Respostas%20Infal%C3%ADveis%20%E2%80%93%20O%20Que%20Dizer%20Quando%20Ele%20Falar%20Qualquer%20Coisa.webp',
+    badge: 'RECOMENDADO'
     checkoutUrl: 'https://pay.lojou.app/p/mx0qC',
   },
   {
     id: 'beijos-17',
-    title: '17 Beijos Que Viciam',
-    description: 'Técnicas avançadas de sedução física',
+    title: '17 Formas de Dar um Beijo Inesquecível',
+    description: 'As 17 técnicas que o tornam quimicamente dependente de ti. Descobre os segredos que transformam um beijo comum num momento inesquecível.',
     price: 77,
-    image: '💋',
+    image: 'https://pub-335435355c6548d7987945a540eca66b.r2.dev/17%20Formas%20de%20Dar%20um%20Beijo%20Inesquec%C3%ADvel.webp',
     badge: 'NOVO',
-    checkoutUrl: '#',
+    checkoutUrl: 'https://pay.lojou.app/p/L1qgX',
+  },
+  {
+    id: 'frases-101',
+    title: '101 Frases Picantes: Que Tal Uma Mensagem Para Provocar?',
+    description: 'Transforma o WhatsApp na vossa preliminar. Usa estas 101 frases "proibidas" e vê como ele fica obcecado a imaginar cenários contigo.',
+    price: 77,
+    image: 'https://pub-335435355c6548d7987945a540eca66b.r2.dev/101%20Frases%20Picantes%20Que%20Tal%20Uma%20Mensagem%20Para%20Provocar.webp',
+    badge: 'POPULAR',
+    checkoutUrl: 'https://pay.lojou.app/p/CkvqU',
   },
 ];
 
@@ -104,38 +106,48 @@ export const UpsellCarousel = () => {
           {products.map((product) => (
             <Card
               key={product.id}
-              className="group w-[280px] flex-shrink-0 snap-start cursor-pointer overflow-hidden p-6 transition-all hover:scale-105 hover:border-primary/50"
+              className="group w-[320px] flex-shrink-0 snap-start overflow-hidden transition-all hover:scale-[1.02] hover:shadow-xl"
             >
               {product.badge && (
                 <Badge
                   variant={product.badge === 'POPULAR' ? 'default' : 'secondary'}
-                  className="mb-3"
+                  className="absolute right-4 top-4 z-10 shadow-lg"
                 >
                   {product.badge}
                 </Badge>
               )}
 
-              <div className="mb-4 text-center text-5xl">{product.image}</div>
+              {/* Imagem da Capa */}
+              <div className="relative aspect-[3/4] w-full overflow-hidden bg-muted">
+                <img
+                  src={product.image}
+                  alt={product.title}
+                  className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+                  loading="lazy"
+                />
+              </div>
 
-              <h3 className="mb-2 min-h-[3rem] text-center font-bold text-foreground">
-                {product.title}
-              </h3>
+              {/* Conteúdo do Card */}
+              <div className="p-6">
+                <h3 className="mb-3 line-clamp-2 min-h-[3rem] font-bold text-foreground text-lg">
+                  {product.title}
+                </h3>
 
-              <p className="mb-4 line-clamp-2 text-center text-sm text-muted-foreground">
-                {product.description}
-              </p>
+                <p className="mb-4 line-clamp-3 text-sm text-muted-foreground">
+                  {product.description}
+                </p>
 
-              <p className="mb-4 text-center text-2xl font-bold text-primary">
-                {product.price} MZN
-              </p>
+                <p className="mb-4 text-2xl font-bold text-primary">
+                  {product.price} MZN
+                </p>
 
-              <Button
-                className="w-full"
-                variant="outline"
-                onClick={() => window.open(product.checkoutUrl, '_blank')}
-              >
-                Quero Este Bónus
-              </Button>
+                <Button
+                  className="w-full"
+                  onClick={() => window.open(product.checkoutUrl, '_blank')}
+                >
+                  Quero Este Bónus
+                </Button>
+              </div>
             </Card>
           ))}
         </div>
