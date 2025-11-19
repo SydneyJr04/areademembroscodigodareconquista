@@ -10,19 +10,16 @@ interface Product {
   title: string;
   description: string;
   price: number;
-  originalPrice?: number; // Preço antes do desconto
+  originalPrice?: number;
   image: string;
   badge?: string;
   checkoutUrl: string;
-  rating: number; // 0-5
-  totalSales: number; // Quantas pessoas compraram
-  conversionPriority: number; // 1 = mais prioritário
+  rating: number;
+  totalSales: number;
+  conversionPriority: number;
 }
 
 const products: Product[] = [
-  // ═══════════════════════════════════════════════════════════
-  // ORDENAÇÃO POR CONVERSÃO (menor preço primeiro)
-  // ═══════════════════════════════════════════════════════════
   {
     id: 'beijos-17',
     title: '17 Formas de Dar um Beijo Inesquecível',
@@ -34,7 +31,7 @@ const products: Product[] = [
     checkoutUrl: 'https://pay.lojou.app/p/L1qgX',
     rating: 4.9,
     totalSales: 412,
-    conversionPriority: 1, // MAIS PRIORITÁRIO (menor preço)
+    conversionPriority: 1,
   },
   {
     id: 'frases-101',
@@ -82,7 +79,6 @@ export const UpsellCarousel = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isAutoScrolling, setIsAutoScrolling] = useState(true);
 
-  // Auto-scroll a cada 5 segundos
   useEffect(() => {
     if (!isAutoScrolling) return;
 
@@ -95,7 +91,7 @@ export const UpsellCarousel = () => {
 
   const scroll = (direction: 'left' | 'right') => {
     if (scrollRef.current) {
-      const scrollAmount = 350;
+      const scrollAmount = 300; // ✅ AJUSTADO para cards menores
       const newScroll =
         direction === 'left'
           ? scrollRef.current.scrollLeft - scrollAmount
@@ -106,7 +102,6 @@ export const UpsellCarousel = () => {
         behavior: 'smooth',
       });
 
-      // Calcular novo índice
       const newIndex =
         direction === 'left'
           ? Math.max(0, currentIndex - 1)
@@ -118,7 +113,7 @@ export const UpsellCarousel = () => {
 
   const scrollToIndex = (index: number) => {
     if (scrollRef.current) {
-      const scrollAmount = 350 * index;
+      const scrollAmount = 300 * index; // ✅ AJUSTADO
       scrollRef.current.scrollTo({
         left: scrollAmount,
         behavior: 'smooth',
@@ -127,9 +122,7 @@ export const UpsellCarousel = () => {
     }
   };
 
-  // Track click (analytics)
   const trackProductClick = (productId: string, productTitle: string) => {
-    // Google Analytics ou similar
     if (typeof window !== 'undefined' && (window as any).gtag) {
       (window as any).gtag('event', 'upsell_click', {
         product_id: productId,
@@ -142,15 +135,15 @@ export const UpsellCarousel = () => {
   return (
     <section className="space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
         <div className="space-y-1">
           <div className="flex items-center gap-2">
-            <TrendingUp className="h-6 w-6 text-primary" />
-            <h2 className="text-2xl font-bold text-foreground md:text-3xl">
+            <TrendingUp className="h-5 w-5 text-primary md:h-6 md:w-6" />
+            <h2 className="text-xl font-bold text-foreground md:text-2xl lg:text-3xl">
               Acelere Sua Reconquista
             </h2>
           </div>
-          <p className="text-sm text-muted-foreground md:text-base">
+          <p className="text-xs text-muted-foreground md:text-sm">
             ⚡ Ferramentas usadas por <span className="font-semibold text-primary">12.847+ alunas</span> com sucesso comprovado
           </p>
         </div>
@@ -188,20 +181,20 @@ export const UpsellCarousel = () => {
       <div className="relative">
         <div
           ref={scrollRef}
-          className="scrollbar-hide flex snap-x snap-mandatory gap-6 overflow-x-auto pb-6"
+          className="scrollbar-hide flex snap-x snap-mandatory gap-4 overflow-x-auto pb-6 md:gap-6"
           onMouseEnter={() => setIsAutoScrolling(false)}
           onMouseLeave={() => setIsAutoScrolling(true)}
         >
           {products.map((product) => (
             <Card
               key={product.id}
-              className="group relative w-[320px] flex-shrink-0 snap-start overflow-hidden border-2 transition-all hover:scale-[1.03] hover:border-primary hover:shadow-2xl md:w-[350px]"
+              className="group relative w-[280px] flex-shrink-0 snap-start overflow-hidden border-2 transition-all hover:scale-[1.03] hover:border-primary hover:shadow-2xl sm:w-[300px]"
             >
               {/* Badge */}
               {product.badge && (
                 <Badge
                   variant="default"
-                  className="absolute right-4 top-4 z-10 animate-pulse bg-gradient-to-r from-primary to-secondary px-3 py-1 text-xs font-bold shadow-lg"
+                  className="absolute right-3 top-3 z-10 animate-pulse bg-gradient-to-r from-primary to-secondary px-2 py-0.5 text-[10px] font-bold shadow-lg sm:px-3 sm:py-1 sm:text-xs"
                 >
                   {product.badge}
                 </Badge>
@@ -209,13 +202,13 @@ export const UpsellCarousel = () => {
 
               {/* Desconto % */}
               {product.originalPrice && (
-                <div className="absolute left-4 top-4 z-10 rounded-full bg-destructive px-3 py-1 text-xs font-bold text-destructive-foreground shadow-lg">
+                <div className="absolute left-3 top-3 z-10 rounded-full bg-destructive px-2 py-0.5 text-[10px] font-bold text-destructive-foreground shadow-lg sm:px-3 sm:py-1 sm:text-xs">
                   -{Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100)}%
                 </div>
               )}
 
-              {/* Imagem */}
-              <div className="relative aspect-[3/4] w-full overflow-hidden bg-muted">
+              {/* Imagem - ✅ ASPECT RATIO REDUZIDO */}
+              <div className="relative aspect-[4/5] w-full overflow-hidden bg-muted">
                 <img
                   src={product.image}
                   alt={product.title}
@@ -226,8 +219,8 @@ export const UpsellCarousel = () => {
                 {/* Overlay com CTA no hover */}
                 <div className="absolute inset-0 flex items-center justify-center bg-black/60 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
                   <Button
-                    size="lg"
-                    className="animate-bounce bg-primary text-lg font-bold"
+                    size="sm"
+                    className="animate-bounce bg-primary text-sm font-bold sm:text-base"
                     onClick={() => {
                       trackProductClick(product.id, product.title);
                       window.open(product.checkoutUrl, '_blank');
@@ -238,8 +231,8 @@ export const UpsellCarousel = () => {
                 </div>
               </div>
 
-              {/* Conteúdo */}
-              <div className="space-y-4 p-6">
+              {/* Conteúdo - ✅ PADDING REDUZIDO */}
+              <div className="space-y-3 p-4 sm:p-5">
                 {/* Rating */}
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-1">
@@ -247,47 +240,47 @@ export const UpsellCarousel = () => {
                       <Star
                         key={i}
                         className={cn(
-                          'h-4 w-4',
+                          'h-3 w-3 sm:h-4 sm:w-4',
                           i < Math.floor(product.rating)
                             ? 'fill-yellow-400 text-yellow-400'
                             : 'text-gray-300'
                         )}
                       />
                     ))}
-                    <span className="ml-2 text-sm font-semibold text-foreground">
+                    <span className="ml-1 text-xs font-semibold text-foreground sm:text-sm">
                       {product.rating}
                     </span>
                   </div>
                   
                   {/* Social Proof */}
-                  <p className="text-xs text-muted-foreground">
+                  <p className="text-[10px] text-muted-foreground sm:text-xs">
                     <span className="font-semibold text-primary">{product.totalSales}</span> vendidos
                   </p>
                 </div>
 
-                {/* Título */}
-                <h3 className="line-clamp-2 min-h-[3rem] text-lg font-bold leading-tight text-foreground">
+                {/* Título - ✅ SEM line-clamp */}
+                <h3 className="text-base font-bold leading-tight text-foreground sm:text-lg">
                   {product.title}
                 </h3>
 
-                {/* Descrição */}
-                <p className="line-clamp-3 text-sm text-muted-foreground">
+                {/* Descrição - ✅ SEM line-clamp */}
+                <p className="text-xs text-muted-foreground sm:text-sm">
                   {product.description}
                 </p>
 
                 {/* Preço */}
                 <div className="space-y-1">
                   {product.originalPrice && (
-                    <p className="text-sm text-muted-foreground line-through">
+                    <p className="text-xs text-muted-foreground line-through sm:text-sm">
                       De: {product.originalPrice} MZN
                     </p>
                   )}
-                  <div className="flex items-baseline gap-2">
-                    <p className="text-3xl font-bold text-primary">
+                  <div className="flex flex-wrap items-baseline gap-2">
+                    <p className="text-2xl font-bold text-primary sm:text-3xl">
                       {product.price} MZN
                     </p>
                     {product.originalPrice && (
-                      <span className="rounded-md bg-destructive/20 px-2 py-0.5 text-xs font-bold text-destructive">
+                      <span className="rounded-md bg-destructive/20 px-1.5 py-0.5 text-[10px] font-bold text-destructive sm:px-2 sm:text-xs">
                         ECONOMIZE {product.originalPrice - product.price} MZN
                       </span>
                     )}
@@ -295,16 +288,16 @@ export const UpsellCarousel = () => {
                 </div>
 
                 {/* Urgência */}
-                <div className="flex items-center gap-2 rounded-lg bg-muted/50 p-3">
-                  <Clock className="h-4 w-4 text-primary" />
-                  <p className="text-xs font-medium text-foreground">
+                <div className="flex items-center gap-2 rounded-lg bg-muted/50 p-2 sm:p-3">
+                  <Clock className="h-3 w-3 text-primary sm:h-4 sm:w-4" />
+                  <p className="text-[10px] font-medium text-foreground sm:text-xs">
                     ⏰ Desconto expira em <span className="font-bold text-primary">48h</span>
                   </p>
                 </div>
 
                 {/* CTA Button */}
                 <Button
-                  className="w-full bg-gradient-to-r from-primary to-secondary py-6 text-base font-bold shadow-lg transition-all hover:scale-[1.02] hover:shadow-xl"
+                  className="w-full bg-gradient-to-r from-primary to-secondary py-5 text-sm font-bold shadow-lg transition-all hover:scale-[1.02] hover:shadow-xl sm:py-6 sm:text-base"
                   onClick={() => {
                     trackProductClick(product.id, product.title);
                     window.open(product.checkoutUrl, '_blank');
@@ -314,8 +307,8 @@ export const UpsellCarousel = () => {
                 </Button>
 
                 {/* Garantia */}
-                <div className="flex items-center justify-center gap-2 text-xs text-muted-foreground">
-                  <ShieldCheck className="h-4 w-4 text-green-500" />
+                <div className="flex items-center justify-center gap-1.5 text-[10px] text-muted-foreground sm:gap-2 sm:text-xs">
+                  <ShieldCheck className="h-3 w-3 text-green-500 sm:h-4 sm:w-4" />
                   <span>Garantia de 7 dias ou seu dinheiro de volta</span>
                 </div>
               </div>
@@ -324,7 +317,7 @@ export const UpsellCarousel = () => {
         </div>
 
         {/* Indicadores de navegação (dots) */}
-        <div className="mt-6 flex items-center justify-center gap-2">
+        <div className="mt-4 flex items-center justify-center gap-2 sm:mt-6">
           {products.map((_, index) => (
             <button
               key={index}
@@ -345,8 +338,8 @@ export const UpsellCarousel = () => {
       </div>
 
       {/* Footer - Prova Social Global */}
-      <div className="rounded-lg border border-primary/20 bg-primary/5 p-4 text-center">
-        <p className="text-sm font-medium text-foreground">
+      <div className="rounded-lg border border-primary/20 bg-primary/5 p-3 text-center sm:p-4">
+        <p className="text-xs font-medium text-foreground sm:text-sm">
           ✨ <span className="font-bold text-primary">1.729 alunas</span> compraram estes bónus esta semana
         </p>
       </div>
