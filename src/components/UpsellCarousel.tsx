@@ -79,19 +79,20 @@ export const UpsellCarousel = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isAutoScrolling, setIsAutoScrolling] = useState(true);
 
+  // ✅ AUTO-SCROLL MAIS LENTO: 8 segundos (era 5)
   useEffect(() => {
     if (!isAutoScrolling) return;
 
     const interval = setInterval(() => {
       scroll('right');
-    }, 5000);
+    }, 8000); // ✅ AUMENTADO DE 5000 PARA 8000ms
 
     return () => clearInterval(interval);
   }, [isAutoScrolling, currentIndex]);
 
   const scroll = (direction: 'left' | 'right') => {
     if (scrollRef.current) {
-      const scrollAmount = 300; // ✅ AJUSTADO para cards menores
+      const scrollAmount = 260; // ✅ AJUSTADO para cards de 240-260px
       const newScroll =
         direction === 'left'
           ? scrollRef.current.scrollLeft - scrollAmount
@@ -113,7 +114,7 @@ export const UpsellCarousel = () => {
 
   const scrollToIndex = (index: number) => {
     if (scrollRef.current) {
-      const scrollAmount = 300 * index; // ✅ AJUSTADO
+      const scrollAmount = 260 * index; // ✅ AJUSTADO
       scrollRef.current.scrollTo({
         left: scrollAmount,
         behavior: 'smooth',
@@ -181,20 +182,20 @@ export const UpsellCarousel = () => {
       <div className="relative">
         <div
           ref={scrollRef}
-          className="scrollbar-hide flex snap-x snap-mandatory gap-4 overflow-x-auto pb-6 md:gap-6"
+          className="scrollbar-hide flex snap-x snap-mandatory gap-4 overflow-x-auto pb-6"
           onMouseEnter={() => setIsAutoScrolling(false)}
           onMouseLeave={() => setIsAutoScrolling(true)}
         >
           {products.map((product) => (
             <Card
               key={product.id}
-              className="group relative w-[280px] flex-shrink-0 snap-start overflow-hidden border-2 transition-all hover:scale-[1.03] hover:border-primary hover:shadow-2xl sm:w-[300px]"
+              className="group relative w-[240px] flex-shrink-0 snap-start overflow-hidden border-2 transition-all hover:scale-[1.03] hover:border-primary hover:shadow-2xl sm:w-[260px]"
             >
               {/* Badge */}
               {product.badge && (
                 <Badge
                   variant="default"
-                  className="absolute right-3 top-3 z-10 animate-pulse bg-gradient-to-r from-primary to-secondary px-2 py-0.5 text-[10px] font-bold shadow-lg sm:px-3 sm:py-1 sm:text-xs"
+                  className="absolute right-2 top-2 z-10 animate-pulse bg-gradient-to-r from-primary to-secondary px-2 py-0.5 text-[10px] font-bold shadow-lg sm:right-3 sm:top-3"
                 >
                   {product.badge}
                 </Badge>
@@ -202,12 +203,12 @@ export const UpsellCarousel = () => {
 
               {/* Desconto % */}
               {product.originalPrice && (
-                <div className="absolute left-3 top-3 z-10 rounded-full bg-destructive px-2 py-0.5 text-[10px] font-bold text-destructive-foreground shadow-lg sm:px-3 sm:py-1 sm:text-xs">
+                <div className="absolute left-2 top-2 z-10 rounded-full bg-destructive px-2 py-0.5 text-[10px] font-bold text-destructive-foreground shadow-lg sm:left-3 sm:top-3">
                   -{Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100)}%
                 </div>
               )}
 
-              {/* Imagem - ✅ ASPECT RATIO REDUZIDO */}
+              {/* Imagem */}
               <div className="relative aspect-[4/5] w-full overflow-hidden bg-muted">
                 <img
                   src={product.image}
@@ -220,7 +221,7 @@ export const UpsellCarousel = () => {
                 <div className="absolute inset-0 flex items-center justify-center bg-black/60 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
                   <Button
                     size="sm"
-                    className="animate-bounce bg-primary text-sm font-bold sm:text-base"
+                    className="animate-bounce bg-primary text-xs font-bold sm:text-sm"
                     onClick={() => {
                       trackProductClick(product.id, product.title);
                       window.open(product.checkoutUrl, '_blank');
@@ -231,56 +232,56 @@ export const UpsellCarousel = () => {
                 </div>
               </div>
 
-              {/* Conteúdo - ✅ PADDING REDUZIDO */}
-              <div className="space-y-3 p-4 sm:p-5">
+              {/* Conteúdo */}
+              <div className="space-y-2.5 p-3 sm:space-y-3 sm:p-4">
                 {/* Rating */}
                 <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-1">
+                  <div className="flex items-center gap-0.5">
                     {[...Array(5)].map((_, i) => (
                       <Star
                         key={i}
                         className={cn(
-                          'h-3 w-3 sm:h-4 sm:w-4',
+                          'h-3 w-3',
                           i < Math.floor(product.rating)
                             ? 'fill-yellow-400 text-yellow-400'
                             : 'text-gray-300'
                         )}
                       />
                     ))}
-                    <span className="ml-1 text-xs font-semibold text-foreground sm:text-sm">
+                    <span className="ml-1 text-[10px] font-semibold text-foreground sm:text-xs">
                       {product.rating}
                     </span>
                   </div>
                   
                   {/* Social Proof */}
-                  <p className="text-[10px] text-muted-foreground sm:text-xs">
+                  <p className="text-[9px] text-muted-foreground sm:text-[10px]">
                     <span className="font-semibold text-primary">{product.totalSales}</span> vendidos
                   </p>
                 </div>
 
-                {/* Título - ✅ SEM line-clamp */}
-                <h3 className="text-base font-bold leading-tight text-foreground sm:text-lg">
+                {/* Título */}
+                <h3 className="text-sm font-bold leading-tight text-foreground sm:text-base">
                   {product.title}
                 </h3>
 
-                {/* Descrição - ✅ SEM line-clamp */}
-                <p className="text-xs text-muted-foreground sm:text-sm">
+                {/* Descrição */}
+                <p className="text-[10px] leading-snug text-muted-foreground sm:text-xs">
                   {product.description}
                 </p>
 
                 {/* Preço */}
-                <div className="space-y-1">
+                <div className="space-y-0.5">
                   {product.originalPrice && (
-                    <p className="text-xs text-muted-foreground line-through sm:text-sm">
+                    <p className="text-[10px] text-muted-foreground line-through sm:text-xs">
                       De: {product.originalPrice} MZN
                     </p>
                   )}
-                  <div className="flex flex-wrap items-baseline gap-2">
-                    <p className="text-2xl font-bold text-primary sm:text-3xl">
+                  <div className="flex flex-wrap items-baseline gap-1.5">
+                    <p className="text-xl font-bold text-primary sm:text-2xl">
                       {product.price} MZN
                     </p>
                     {product.originalPrice && (
-                      <span className="rounded-md bg-destructive/20 px-1.5 py-0.5 text-[10px] font-bold text-destructive sm:px-2 sm:text-xs">
+                      <span className="rounded-md bg-destructive/20 px-1.5 py-0.5 text-[9px] font-bold text-destructive sm:text-[10px]">
                         ECONOMIZE {product.originalPrice - product.price} MZN
                       </span>
                     )}
@@ -288,16 +289,16 @@ export const UpsellCarousel = () => {
                 </div>
 
                 {/* Urgência */}
-                <div className="flex items-center gap-2 rounded-lg bg-muted/50 p-2 sm:p-3">
-                  <Clock className="h-3 w-3 text-primary sm:h-4 sm:w-4" />
-                  <p className="text-[10px] font-medium text-foreground sm:text-xs">
+                <div className="flex items-center gap-1.5 rounded-lg bg-muted/50 p-2">
+                  <Clock className="h-3 w-3 flex-shrink-0 text-primary" />
+                  <p className="text-[9px] font-medium leading-tight text-foreground sm:text-[10px]">
                     ⏰ Desconto expira em <span className="font-bold text-primary">48h</span>
                   </p>
                 </div>
 
                 {/* CTA Button */}
                 <Button
-                  className="w-full bg-gradient-to-r from-primary to-secondary py-5 text-sm font-bold shadow-lg transition-all hover:scale-[1.02] hover:shadow-xl sm:py-6 sm:text-base"
+                  className="w-full bg-gradient-to-r from-primary to-secondary py-4 text-xs font-bold shadow-lg transition-all hover:scale-[1.02] hover:shadow-xl sm:py-5 sm:text-sm"
                   onClick={() => {
                     trackProductClick(product.id, product.title);
                     window.open(product.checkoutUrl, '_blank');
@@ -307,9 +308,9 @@ export const UpsellCarousel = () => {
                 </Button>
 
                 {/* Garantia */}
-                <div className="flex items-center justify-center gap-1.5 text-[10px] text-muted-foreground sm:gap-2 sm:text-xs">
-                  <ShieldCheck className="h-3 w-3 text-green-500 sm:h-4 sm:w-4" />
-                  <span>Garantia de 7 dias ou seu dinheiro de volta</span>
+                <div className="flex items-center justify-center gap-1 text-[9px] text-muted-foreground sm:text-[10px]">
+                  <ShieldCheck className="h-3 w-3 flex-shrink-0 text-green-500" />
+                  <span className="leading-tight">Garantia de 7 dias ou seu dinheiro de volta</span>
                 </div>
               </div>
             </Card>
@@ -317,7 +318,7 @@ export const UpsellCarousel = () => {
         </div>
 
         {/* Indicadores de navegação (dots) */}
-        <div className="mt-4 flex items-center justify-center gap-2 sm:mt-6">
+        <div className="mt-4 flex items-center justify-center gap-2">
           {products.map((_, index) => (
             <button
               key={index}
@@ -338,8 +339,8 @@ export const UpsellCarousel = () => {
       </div>
 
       {/* Footer - Prova Social Global */}
-      <div className="rounded-lg border border-primary/20 bg-primary/5 p-3 text-center sm:p-4">
-        <p className="text-xs font-medium text-foreground sm:text-sm">
+      <div className="rounded-lg border border-primary/20 bg-primary/5 p-3 text-center">
+        <p className="text-xs font-medium text-foreground">
           ✨ <span className="font-bold text-primary">1.729 alunas</span> compraram estes bónus esta semana
         </p>
       </div>
