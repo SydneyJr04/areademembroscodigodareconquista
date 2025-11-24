@@ -84,6 +84,7 @@ export const PremiumUpsell = () => {
               <Button
                 size="lg"
                 className="gap-2 bg-gradient-to-r from-purple-500 to-purple-700 text-white shadow-lg shadow-purple-500/50 hover:from-purple-600 hover:to-purple-800"
+                onClick={() => window.open('https://pay.lojou.app/p/pKPr7', '_blank')}
               >
                 <Lock className="h-5 w-5" />
                 Desbloquear Agora

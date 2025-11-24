@@ -10,6 +10,9 @@ import Dashboard from './pages/Dashboard';
 import Lesson from './pages/Lesson';
 import Community from './pages/Community';
 import MyPlan from './pages/MyPlan';
+import CoursesPage from './pages/CoursesPage';
+import CourseViewPage from './pages/CourseViewPage';
+import CourseLessonPage from './pages/CourseLessonPage';
 import NotFound from './pages/NotFound';
 
 const queryClient = new QueryClient();
@@ -28,7 +31,15 @@ const App = () => (
               <Route path="/dashboard" element={<Dashboard />} />
               <Route path="/comunidade" element={<Community />} />
               <Route path="/meu-plano" element={<MyPlan />} />
+
+              {/* Rotas do sistema multi-cursos */}
+              <Route path="/cursos" element={<CoursesPage />} />
+              <Route path="/cursos/:courseSlug" element={<CourseViewPage />} />
+              <Route path="/cursos/:courseSlug/modulo/:moduleNumber/aula/:lessonNumber" element={<CourseLessonPage />} />
+
+              {/* Rota legada de aulas do curso principal */}
               <Route path="/modulo/:moduleId/aula/:lessonId" element={<Lesson />} />
+
               <Route path="*" element={<NotFound />} />
             </Routes>
           </BrowserRouter>
