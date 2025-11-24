@@ -6,13 +6,22 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { toast } from 'sonner';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Eye, EyeOff } from 'lucide-react';
 
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
   const [fullName, setFullName] = useState('');
   const [whatsapp, setWhatsapp] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
+  // Validação
+  const [emailError, setEmailError] = useState('');
+  const [passwordError, setPasswordError] = useState('');
+
   const navigate = useNavigate();
   const { signIn, signUp, user } = useAuth();
 
@@ -22,8 +31,55 @@ const Login = () => {
     }
   }, [user, navigate]);
 
+  // ═══════════════════════════════════════════════════════════
+  // VALIDAÇÃO DE EMAIL
+  // ═══════════════════════════════════════════════════════════
+  const validateEmail = (email: string): boolean => {
+    const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!regex.test(email)) {
+      setEmailError('Email inválido');
+      return false;
+    }
+    setEmailError('');
+    return true;
+  };
+
+  // ═══════════════════════════════════════════════════════════
+  // VALIDAÇÃO DE SENHA
+  // ═══════════════════════════════════════════════════════════
+  const validatePassword = (password: string): {
+    isValid: boolean;
+    message: string;
+  } => {
+    if (password.length < 8) {
+      return {
+        isValid: false,
+        message: 'Senha deve ter no mínimo 8 caracteres',
+      };
+    }
+
+    const hasUpperCase = /[A-Z]/.test(password);
+    const hasLowerCase = /[a-z]/.test(password);
+    const hasNumber = /[0-9]/.test(password);
+
+    if (!hasUpperCase || !hasLowerCase || !hasNumber) {
+      return {
+        isValid: false,
+        message: 'Senha deve conter maiúsculas, minúsculas e números',
+      };
+    }
+
+    return { isValid: true, message: '' };
+  };
+
+  // ═══════════════════════════════════════════════════════════
+  // HANDLER: LOGIN
+  // ═══════════════════════════════════════════════════════════
   const handleSignIn = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    if (!validateEmail(email)) return;
+
     setIsLoading(true);
 
     const { error } = await signIn(email, password);
@@ -32,27 +88,76 @@ const Login = () => {
       toast.success('Bem-vinda de volta! 🎉');
       navigate('/dashboard');
     } else {
-      toast.error('Credenciais inválidas. Verifica o teu e-mail e palavra-passe.');
+      toast.error('Credenciais inválidas. Verifica o teu e-mail e senha.');
       setIsLoading(false);
     }
   };
 
+  // ═══════════════════════════════════════════════════════════
+  // HANDLER: CADASTRO
+  // ═══════════════════════════════════════════════════════════
   const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    // Validar email
+    if (!validateEmail(email)) return;
+
+    // Validar senha
+    const passwordValidation = validatePassword(password);
+    if (!passwordValidation.isValid) {
+      setPasswordError(passwordValidation.message);
+      toast.error(passwordValidation.message);
+      return;
+    }
+    setPasswordError('');
+
+    // Confirmar senha
+    if (password !== confirmPassword) {
+      toast.error('As senhas não coincidem');
+      return;
+    }
+
+    // Validar nome completo
+    if (fullName.trim().length < 3) {
+      toast.error('Nome deve ter no mínimo 3 caracteres');
+      return;
+    }
+
+    // Validar WhatsApp
+    if (whatsapp.trim().length < 9) {
+      toast.error('Número de WhatsApp inválido');
+      return;
+    }
+
     setIsLoading(true);
 
-    // Fixed password for all signups
-    const fixedPassword = 'Reconquista@2026';
-
-    const { error } = await signUp(email, fixedPassword, fullName, whatsapp);
+    const { error } = await signUp(email, password, fullName, whatsapp);
 
     if (!error) {
-      toast.success('Conta criada! Agora faça login com seu e-mail e a senha Reconquista@2026');
-      navigate('/login');
+      toast.success('Conta criada! Agora faça login com suas credenciais', {
+        duration: 5000,
+      });
+      // Limpar campos
+      setPassword('');
+      setConfirmPassword('');
     } else {
       toast.error(error.message || 'Erro ao criar conta. Tenta novamente.');
       setIsLoading(false);
     }
+  };
+
+  // ═══════════════════════════════════════════════════════════
+  // HANDLER: ESQUECI MINHA SENHA
+  // ═══════════════════════════════════════════════════════════
+  const handleForgotPassword = () => {
+    if (!email) {
+      toast.error('Digite seu email primeiro');
+      return;
+    }
+
+    if (!validateEmail(email)) return;
+
+    navigate('/reset-password', { state: { email } });
   };
 
   return (
@@ -89,6 +194,9 @@ const Login = () => {
               <TabsTrigger value="signup">Criar Conta</TabsTrigger>
             </TabsList>
 
+            {/* ═══════════════════════════════════════════════════════════
+                TAB: LOGIN
+                ═══════════════════════════════════════════════════════════ */}
             <TabsContent value="signin">
               <form onSubmit={handleSignIn} className="space-y-6">
                 <div className="space-y-2">
@@ -100,25 +208,57 @@ const Login = () => {
                     type="email"
                     placeholder="teu@email.com"
                     value={email}
-                    onChange={(e) => setEmail(e.target.value)}
+                    onChange={(e) => {
+                      setEmail(e.target.value);
+                      if (emailError) validateEmail(e.target.value);
+                    }}
                     required
-                    className="border-border bg-background/50 text-foreground transition-all placeholder:text-muted-foreground focus:border-primary"
+                    className={`border-border bg-background/50 text-foreground transition-all placeholder:text-muted-foreground focus:border-primary ${
+                      emailError ? 'border-destructive' : ''
+                    }`}
                   />
+                  {emailError && (
+                    <p className="text-xs text-destructive">{emailError}</p>
+                  )}
                 </div>
 
                 <div className="space-y-2">
                   <Label htmlFor="password-signin" className="text-foreground">
-                    Palavra-passe
+                    Senha
                   </Label>
-                  <Input
-                    id="password-signin"
-                    type="password"
-                    placeholder="••••••••"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    required
-                    className="border-border bg-background/50 text-foreground transition-all placeholder:text-muted-foreground focus:border-primary"
-                  />
+                  <div className="relative">
+                    <Input
+                      id="password-signin"
+                      type={showPassword ? 'text' : 'password'}
+                      placeholder="••••••••"
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      required
+                      className="border-border bg-background/50 pr-10 text-foreground transition-all placeholder:text-muted-foreground focus:border-primary"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowPassword(!showPassword)}
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                    >
+                      {showPassword ? (
+                        <EyeOff className="h-4 w-4" />
+                      ) : (
+                        <Eye className="h-4 w-4" />
+                      )}
+                    </button>
+                  </div>
+                </div>
+
+                <div className="flex justify-end">
+                  <Button
+                    type="button"
+                    variant="link"
+                    className="px-0 text-sm text-primary hover:text-primary/80"
+                    onClick={handleForgotPassword}
+                  >
+                    Esqueceu a senha?
+                  </Button>
                 </div>
 
                 <Button
@@ -131,6 +271,9 @@ const Login = () => {
               </form>
             </TabsContent>
 
+            {/* ═══════════════════════════════════════════════════════════
+                TAB: CADASTRO
+                ═══════════════════════════════════════════════════════════ */}
             <TabsContent value="signup">
               <form onSubmit={handleSignUp} className="space-y-6">
                 <div className="space-y-2">
@@ -157,10 +300,18 @@ const Login = () => {
                     type="email"
                     placeholder="teu@email.com"
                     value={email}
-                    onChange={(e) => setEmail(e.target.value)}
+                    onChange={(e) => {
+                      setEmail(e.target.value);
+                      if (emailError) validateEmail(e.target.value);
+                    }}
                     required
-                    className="border-border bg-background/50 text-foreground transition-all placeholder:text-muted-foreground focus:border-primary"
+                    className={`border-border bg-background/50 text-foreground transition-all placeholder:text-muted-foreground focus:border-primary ${
+                      emailError ? 'border-destructive' : ''
+                    }`}
                   />
+                  {emailError && (
+                    <p className="text-xs text-destructive">{emailError}</p>
+                  )}
                 </div>
 
                 <div className="space-y-2">
@@ -178,10 +329,97 @@ const Login = () => {
                   />
                 </div>
 
+                <div className="space-y-2">
+                  <Label htmlFor="password-signup" className="text-foreground">
+                    Senha
+                  </Label>
+                  <div className="relative">
+                    <Input
+                      id="password-signup"
+                      type={showPassword ? 'text' : 'password'}
+                      placeholder="Mínimo 8 caracteres"
+                      value={password}
+                      onChange={(e) => {
+                        setPassword(e.target.value);
+                        if (passwordError) {
+                          const validation = validatePassword(e.target.value);
+                          setPasswordError(
+                            validation.isValid ? '' : validation.message
+                          );
+                        }
+                      }}
+                      required
+                      className={`border-border bg-background/50 pr-10 text-foreground transition-all placeholder:text-muted-foreground focus:border-primary ${
+                        passwordError ? 'border-destructive' : ''
+                      }`}
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowPassword(!showPassword)}
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                    >
+                      {showPassword ? (
+                        <EyeOff className="h-4 w-4" />
+                      ) : (
+                        <Eye className="h-4 w-4" />
+                      )}
+                    </button>
+                  </div>
+                  {passwordError && (
+                    <p className="text-xs text-destructive">{passwordError}</p>
+                  )}
+                  {password && !passwordError && (
+                    <p className="text-xs text-green-500">✓ Senha válida</p>
+                  )}
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="confirm-password" className="text-foreground">
+                    Confirmar Senha
+                  </Label>
+                  <div className="relative">
+                    <Input
+                      id="confirm-password"
+                      type={showConfirmPassword ? 'text' : 'password'}
+                      placeholder="Digite a senha novamente"
+                      value={confirmPassword}
+                      onChange={(e) => setConfirmPassword(e.target.value)}
+                      required
+                      className="border-border bg-background/50 pr-10 text-foreground transition-all placeholder:text-muted-foreground focus:border-primary"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                    >
+                      {showConfirmPassword ? (
+                        <EyeOff className="h-4 w-4" />
+                      ) : (
+                        <Eye className="h-4 w-4" />
+                      )}
+                    </button>
+                  </div>
+                  {confirmPassword &&
+                    password &&
+                    password === confirmPassword && (
+                      <p className="text-xs text-green-500">✓ Senhas coincidem</p>
+                    )}
+                  {confirmPassword &&
+                    password &&
+                    password !== confirmPassword && (
+                      <p className="text-xs text-destructive">
+                        As senhas não coincidem
+                      </p>
+                    )}
+                </div>
+
                 <div className="rounded-lg bg-muted/30 p-4">
-                  <p className="text-center text-sm text-muted-foreground">
-                    A senha inicial será:{' '}
-                    <span className="font-semibold text-foreground">Reconquista@2026</span>
+                  <p className="text-xs text-muted-foreground">
+                    <strong>Requisitos da senha:</strong>
+                    <br />• Mínimo de 8 caracteres
+                    <br />• Pelo menos uma letra maiúscula
+                    <br />• Pelo menos uma letra minúscula
+                    <br />• Pelo menos um número
                   </p>
                 </div>
 

@@ -10,12 +10,16 @@ import { PremiumUpsell } from '@/components/PremiumUpsell';
 import { BonusCarousel } from '@/components/BonusCarousel';
 import { ThemeToggle } from '@/components/ThemeToggle';
 import { Button } from '@/components/ui/button';
-import { LogOut, Award, TrendingUp, Lock, User, Users } from 'lucide-react';
+import { LogOut, Award, TrendingUp, User, Users, Lock } from 'lucide-react';
 import { toast } from 'sonner';
 import { supabase } from '@/integrations/supabase/client';
 import { WelcomeModal } from '@/components/WelcomeModal';
 import { ValueBreakdownCard } from '@/components/ValueBreakdownCard';
 import { NotificationPrompt } from '@/components/NotificationPrompt';
+import { JourneyMap } from '@/components/JourneyMap';
+import { useUserModules } from '@/hooks/useUserModules';
+import { format, formatDistanceToNow } from 'date-fns';
+import { pt } from 'date-fns/locale';
 
 const Dashboard = () => {
   const { user, loading, signOut } = useAuth();
@@ -26,6 +30,9 @@ const Dashboard = () => {
     achievements: 0,
     streak: 1,
   });
+
+  // ✅ USAR HOOK DE MÓDULOS (DRIP CONTENT)
+  const { modules: userModules, loading: modulesLoading } = useUserModules();
 
   // ═══════════════════════════════════════════════════════════
   // AUTENTICAÇÃO
@@ -44,16 +51,35 @@ const Dashboard = () => {
       if (user) {
         const { data } = await supabase
           .from('profiles')
-          .select('full_name')
+          .select('full_name, subscription_tier, subscription_expires_at')
           .eq('id', user.id)
           .single();
 
-        setProfile(data);
+        if (data) {
+          setProfile(data);
+
+          // ✅ VERIFICAR SE SUBSCRIPTION ESTÁ ATIVA
+          if (data.subscription_tier !== 'vitalicio' && data.subscription_expires_at) {
+            const expiresAt = new Date(data.subscription_expires_at);
+            const isExpired = expiresAt < new Date();
+
+            if (isExpired) {
+              toast.warning('Sua assinatura expirou!', {
+                description: 'Renove para continuar acessando o conteúdo',
+                action: {
+                  label: 'Renovar',
+                  onClick: () => navigate('/meu-plano'),
+                },
+                duration: 10000,
+              });
+            }
+          }
+        }
       }
     };
 
     fetchProfile();
-  }, [user]);
+  }, [user, navigate]);
 
   // ═══════════════════════════════════════════════════════════
   // CARREGAR ESTATÍSTICAS
@@ -84,10 +110,38 @@ const Dashboard = () => {
   }, [user]);
 
   // ═══════════════════════════════════════════════════════════
-  // HANDLER: CLICK NO MÓDULO (SIMPLIFICADO - SEM VERIFICAÇÃO)
+  // ✅ HANDLER: CLICK NO MÓDULO (COM VERIFICAÇÃO!)
   // ═══════════════════════════════════════════════════════════
   const handleModuleClick = (moduleNumber: number) => {
-    console.log(`✅ [Dashboard] Navegando para módulo ${moduleNumber}`);
+    // Buscar módulo do usuário
+    const userModule = userModules.find((m) => m.module_number === moduleNumber);
+
+    if (!userModule) {
+      toast.error('Módulo não encontrado');
+      return;
+    }
+
+    // ✅ VERIFICAR SE ESTÁ LIBERADO
+    if (!userModule.is_released) {
+      const releaseDate = new Date(userModule.release_date);
+      const daysUntil = Math.ceil(
+        (releaseDate.getTime() - Date.now()) / (1000 * 60 * 60 * 24)
+      );
+
+      const relativeTime = formatDistanceToNow(releaseDate, {
+        locale: pt,
+        addSuffix: true,
+      });
+
+      toast.error('🔒 Módulo Bloqueado!', {
+        description: `Será liberado ${relativeTime} (${format(releaseDate, "dd 'de' MMMM", { locale: pt })})`,
+        duration: 5000,
+      });
+      return;
+    }
+
+    // ✅ MÓDULO LIBERADO - PODE ACESSAR
+    console.log(`✅ Acessando módulo ${moduleNumber}`);
     navigate(`/modulo/${moduleNumber}/aula/1`);
   };
 
@@ -103,7 +157,7 @@ const Dashboard = () => {
   // ═══════════════════════════════════════════════════════════
   // LOADING STATE
   // ═══════════════════════════════════════════════════════════
-  if (loading) {
+  if (loading || modulesLoading) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-background">
         <div className="text-center">
@@ -117,7 +171,7 @@ const Dashboard = () => {
   if (!user) return null;
 
   // ═══════════════════════════════════════════════════════════
-  // MÓDULOS (TODOS LIBERADOS)
+  // MÓDULOS CONFIG (UI)
   // ═══════════════════════════════════════════════════════════
   const modulesConfig = getModulesConfig();
 
@@ -249,6 +303,9 @@ const Dashboard = () => {
           <div className="absolute bottom-0 left-0 h-64 w-64 rounded-full bg-secondary/10 blur-3xl" />
         </section>
 
+        {/* ✅ JOURNEY MAP (Mapa de Progresso) */}
+        {userModules.length > 0 && <JourneyMap modules={userModules} />}
+
         {/* Weekly Challenge */}
         <WeeklyChallengeCard />
 
@@ -259,20 +316,45 @@ const Dashboard = () => {
               O Código da Reconquista: A Jornada Completa
             </h2>
             <p className="text-muted-foreground">
-              {modulesConfig.length} módulos transformadores • Todos liberados! 🎉
+              {modulesConfig.length} módulos transformadores •{' '}
+              <span className="font-semibold text-primary">
+                {userModules.filter((m) => m.is_released).length} liberados
+              </span>
             </p>
           </div>
 
           <div className="relative">
             <div className="scrollbar-hide flex snap-x snap-mandatory gap-6 overflow-x-auto pb-6">
-              {modulesConfig.map((module) => (
-                <ModuleCard
-                  key={module.id}
-                  module={module}
-                  isReleased={true}
-                  onClick={() => handleModuleClick(module.number)}
-                />
-              ))}
+              {modulesConfig.map((module) => {
+                // ✅ BUSCAR STATUS DO MÓDULO
+                const userModule = userModules.find((m) => m.module_number === module.number);
+
+                return (
+                  <ModuleCard
+                    key={module.id}
+                    module={module}
+                    isReleased={userModule?.is_released || false}
+                    releaseDate={userModule?.release_date}
+                    onClick={() => handleModuleClick(module.number)}
+                  />
+                );
+              })}
+            </div>
+          </div>
+
+          {/* ✅ LEGENDA */}
+          <div className="flex flex-wrap items-center justify-center gap-6 rounded-lg border border-border bg-card/50 p-4 text-sm">
+            <div className="flex items-center gap-2">
+              <div className="h-3 w-3 rounded-full bg-green-500"></div>
+              <span className="text-muted-foreground">Liberado</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <Lock className="h-4 w-4 text-muted-foreground" />
+              <span className="text-muted-foreground">Bloqueado</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <Award className="h-4 w-4 text-primary" />
+              <span className="text-muted-foreground">Concluído</span>
             </div>
           </div>
         </section>
