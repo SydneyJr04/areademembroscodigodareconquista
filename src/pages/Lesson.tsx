@@ -6,7 +6,7 @@ import { VideoPlayer } from '@/components/VideoPlayer';
 import { LessonSidebar } from '@/components/LessonSidebar';
 import { ModuleCompletionCard } from '@/components/ModuleCompletionCard';
 import { Button } from '@/components/ui/button';
-import { ChevronLeft, ChevronRight, Home, BookOpen } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Home, BookOpen, Lock } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 
@@ -17,31 +17,110 @@ export default function Lesson() {
   const [lesson, setLesson] = useState<any>(null);
   const [progress, setProgress] = useState(0);
   const [moduleProgress, setModuleProgress] = useState(0);
+  const [isVerifying, setIsVerifying] = useState(true);
 
   const moduleNumber = parseInt(params.moduleId || '0');
   const lessonNumber = parseInt(params.lessonId || '0');
 
-  // Verificar autenticação
+  // ═══════════════════════════════════════════════════════════
+  // ✅ VERIFICAÇÃO DE ACESSO COMPLETA
+  // ═══════════════════════════════════════════════════════════
   useEffect(() => {
-    if (!loading && !user) {
-      navigate('/login');
-    }
-  }, [user, loading, navigate]);
+    const verifyAccess = async () => {
+      // 1. Verificar autenticação
+      if (!loading && !user) {
+        toast.error('Você precisa fazer login');
+        navigate('/login');
+        return;
+      }
 
-  // Carregar dados da aula
-  useEffect(() => {
-    const data = getLessonData(moduleNumber, lessonNumber);
+      if (!user) return;
 
-    if (!data) {
-      toast.error('Aula não encontrada');
-      navigate('/dashboard');
-      return;
-    }
+      try {
+        setIsVerifying(true);
 
-    setLesson(data);
-  }, [moduleNumber, lessonNumber]);
+        // 2. Verificar se módulo está liberado
+        const { data: userModule, error: moduleError } = await supabase
+          .from('user_modules')
+          .select('is_released, release_date, module_name')
+          .eq('user_id', user.id)
+          .eq('module_number', moduleNumber)
+          .single();
 
-  // Calcular progresso do módulo
+        if (moduleError) {
+          console.error('Erro ao verificar módulo:', moduleError);
+          toast.error('Erro ao verificar acesso ao módulo');
+          navigate('/dashboard');
+          return;
+        }
+
+        if (!userModule?.is_released) {
+          const releaseDate = new Date(userModule.release_date);
+          toast.error('🔒 Módulo ainda não liberado!', {
+            description: `Este módulo será liberado em ${releaseDate.toLocaleDateString('pt-BR')}`,
+            duration: 5000,
+          });
+          navigate('/dashboard');
+          return;
+        }
+
+        // 3. Verificar subscription ativa
+        const { data: profile, error: profileError } = await supabase
+          .from('profiles')
+          .select('subscription_tier, subscription_expires_at')
+          .eq('id', user.id)
+          .single();
+
+        if (profileError) {
+          console.error('Erro ao verificar perfil:', profileError);
+        }
+
+        if (profile) {
+          const isVitalicio = profile.subscription_tier === 'vitalicio';
+          const expiresAt = profile.subscription_expires_at
+            ? new Date(profile.subscription_expires_at)
+            : null;
+          const isExpired = expiresAt && expiresAt < new Date();
+
+          if (!isVitalicio && isExpired) {
+            toast.error('Sua assinatura expirou!', {
+              description: 'Renove para continuar acessando o conteúdo',
+              action: {
+                label: 'Renovar',
+                onClick: () => navigate('/meu-plano'),
+              },
+              duration: 10000,
+            });
+            navigate('/meu-plano');
+            return;
+          }
+        }
+
+        // 4. Verificar se a aula existe
+        const lessonData = getLessonData(moduleNumber, lessonNumber);
+
+        if (!lessonData) {
+          toast.error('Aula não encontrada');
+          navigate('/dashboard');
+          return;
+        }
+
+        // ✅ TUDO OK - Permitir acesso
+        setLesson(lessonData);
+        setIsVerifying(false);
+      } catch (error) {
+        console.error('Erro na verificação de acesso:', error);
+        toast.error('Erro ao verificar acesso');
+        navigate('/dashboard');
+      }
+    };
+
+    verifyAccess();
+  }, [user, loading, moduleNumber, lessonNumber, navigate]);
+
+  // ═══════════════════════════════════════════════════════════
+  // CALCULAR PROGRESSO DO MÓDULO
+  // ═══════════════════════════════════════════════════════════
   useEffect(() => {
     const calculateModuleProgress = async () => {
       if (!user) return;
@@ -52,6 +131,7 @@ export default function Lesson() {
         .from('user_lessons')
         .select('is_completed')
         .eq('user_id', user.id)
+        .eq('module_id', moduleNumber)
         .eq('is_completed', true);
 
       const completedCount = data?.length || 0;
@@ -62,46 +142,88 @@ export default function Lesson() {
     calculateModuleProgress();
   }, [user, moduleNumber, lessonNumber]);
 
+  // ═══════════════════════════════════════════════════════════
+  // ATUALIZAR PROGRESSO
+  // ═══════════════════════════════════════════════════════════
   const handleProgress = async (percentage: number) => {
     setProgress(percentage);
 
     if (!user || !lesson) return;
 
     // Salvar progresso no Supabase
-    await supabase.from('user_lessons').upsert({
-      user_id: user.id,
-      module_id: moduleNumber,
-      lesson_id: lessonNumber,
-      watch_percentage: percentage,
-    }, {
-      onConflict: 'user_id,module_id,lesson_id'
-    });
+    await supabase
+      .from('user_lessons')
+      .upsert(
+        {
+          user_id: user.id,
+          module_id: moduleNumber,
+          lesson_id: lessonNumber,
+          watch_percentage: percentage,
+          is_completed: percentage >= 90,
+          completed_at: percentage >= 90 ? new Date().toISOString() : null,
+        },
+        {
+          onConflict: 'user_id,module_id,lesson_id',
+        }
+      );
   };
 
+  // ═══════════════════════════════════════════════════════════
+  // MARCAR COMO COMPLETA
+  // ═══════════════════════════════════════════════════════════
   const handleComplete = async () => {
     if (!user || !lesson) return;
 
-    await supabase.from('user_lessons').upsert({
-      user_id: user.id,
-      module_id: moduleNumber,
-      lesson_id: lessonNumber,
-      is_completed: true,
-      completed_at: new Date().toISOString(),
-    }, {
-      onConflict: 'user_id,module_id,lesson_id'
-    });
+    await supabase
+      .from('user_lessons')
+      .upsert(
+        {
+          user_id: user.id,
+          module_id: moduleNumber,
+          lesson_id: lessonNumber,
+          is_completed: true,
+          completed_at: new Date().toISOString(),
+          watch_percentage: 100,
+        },
+        {
+          onConflict: 'user_id,module_id,lesson_id',
+        }
+      );
 
     toast.success('🎉 Aula concluída!', {
       description: 'Parabéns por mais uma conquista!',
     });
   };
 
-  if (loading || !lesson) {
+  // ═══════════════════════════════════════════════════════════
+  // LOADING STATES
+  // ═══════════════════════════════════════════════════════════
+  if (loading || isVerifying) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-background">
         <div className="text-center">
           <div className="mx-auto mb-4 h-16 w-16 animate-spin rounded-full border-b-4 border-primary"></div>
-          <p className="text-muted-foreground">Carregando aula...</p>
+          <p className="text-muted-foreground">
+            {isVerifying ? 'Verificando acesso...' : 'Carregando aula...'}
+          </p>
+        </div>
+      </div>
+    );
+  }
+
+  if (!lesson) {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-background">
+        <div className="text-center">
+          <Lock className="mx-auto mb-4 h-16 w-16 text-muted-foreground" />
+          <h2 className="mb-2 text-2xl font-bold text-foreground">Acesso Negado</h2>
+          <p className="mb-6 text-muted-foreground">
+            Você não tem permissão para acessar esta aula
+          </p>
+          <Button onClick={() => navigate('/dashboard')}>
+            <Home className="mr-2 h-4 w-4" />
+            Voltar ao Dashboard
+          </Button>
         </div>
       </div>
     );
