@@ -10,7 +10,7 @@ import { MentoriaLivesCard } from '@/components/MentoriaLivesCard';
 import { SocialProof } from '@/components/SocialProof';
 import { ThemeToggle } from '@/components/ThemeToggle';
 import { Button } from '@/components/ui/button';
-import { LogOut, Award, TrendingUp, User, CreditCard } from 'lucide-react';
+import { LogOut, Award, TrendingUp, User, Users, CreditCard } from 'lucide-react';
 import { toast } from 'sonner';
 import { supabase } from '@/integrations/supabase/client';
 import { WelcomeModal } from '@/components/WelcomeModal';
