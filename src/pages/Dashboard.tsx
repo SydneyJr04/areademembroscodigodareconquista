@@ -5,16 +5,15 @@ import { getModulesConfig } from '@/data/modulesConfig';
 import { getTotalLessons } from '@/data/lessons';
 import { ModuleCard } from '@/components/ModuleCard';
 import { WeeklyChallengeCard } from '@/components/WeeklyChallengeCard';
-import { UpsellCarousel } from '@/components/UpsellCarousel';
 import { PremiumUpsell } from '@/components/PremiumUpsell';
-import { BonusCarousel } from '@/components/BonusCarousel';
+import { MentoriaLivesCard } from '@/components/MentoriaLivesCard';
+import { SocialProof } from '@/components/SocialProof';
 import { ThemeToggle } from '@/components/ThemeToggle';
 import { Button } from '@/components/ui/button';
-import { LogOut, Award, TrendingUp, Lock, User, Users } from 'lucide-react';
+import { LogOut, Award, TrendingUp, User, CreditCard } from 'lucide-react';
 import { toast } from 'sonner';
 import { supabase } from '@/integrations/supabase/client';
 import { WelcomeModal } from '@/components/WelcomeModal';
-import { ValueBreakdownCard } from '@/components/ValueBreakdownCard';
 import { NotificationPrompt } from '@/components/NotificationPrompt';
 
 const Dashboard = () => {
@@ -277,14 +276,37 @@ const Dashboard = () => {
           </div>
         </section>
 
-        {/* Recomendado Para Você */}
-        <UpsellCarousel />
-
         {/* Seção Premium: A Deusa na Cama */}
         <PremiumUpsell />
 
-        {/* O Teu Arsenal Secreto */}
-        <BonusCarousel />
+        {/* Mentoria e Lives */}
+        <MentoriaLivesCard />
+
+        {/* Provas Sociais */}
+        <SocialProof />
+
+        {/* Call to Action - Planos (última seção) */}
+        <section className="space-y-6">
+          <div className="text-center">
+            <h2 className="mb-2 text-2xl font-bold text-foreground md:text-3xl">
+              Escolha Seu Plano de Acesso
+            </h2>
+            <p className="text-muted-foreground">
+              Comece sua transformação hoje mesmo
+            </p>
+          </div>
+
+          <div className="flex justify-center">
+            <Button
+              size="lg"
+              onClick={() => navigate('/meu-plano')}
+              className="gap-2 bg-gradient-to-r from-primary to-primary/80 text-lg font-bold shadow-lg transition-all hover:scale-105"
+            >
+              <CreditCard className="h-5 w-5" />
+              Ver Todos os Planos
+            </Button>
+          </div>
+        </section>
       </div>
     </div>
   );
