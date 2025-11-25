@@ -93,32 +93,6 @@ const Community = () => {
           </div>
         </Card>
 
-        {/* Lives Mentoria Card (Upsell) */}
-        <Card className="border-purple-500/30 bg-gradient-to-br from-purple-500/20 to-background p-8">
-          <div className="flex flex-col items-center gap-6 md:flex-row">
-            <div className="rounded-full bg-purple-500/20 p-6">
-              <Video className="h-16 w-16 text-purple-500" />
-            </div>
-            <div className="flex-1 text-center md:text-left">
-              <div className="mb-3 inline-block rounded-full bg-purple-500/20 px-3 py-1 text-sm font-semibold text-purple-400">
-                PREMIUM
-              </div>
-              <h2 className="mb-3 text-2xl font-bold text-foreground">
-                Lives Semanais de Mentoria
-              </h2>
-              <p className="mb-4 text-muted-foreground">
-                Aulas ao vivo comigo, sessões de Perguntas & Respostas e análise de casos reais.
-                Acesso direto para tirar suas dúvidas e acelerar sua reconquista.
-              </p>
-              <p className="mb-6 text-3xl font-bold text-purple-400">647 MZN/mês</p>
-              <Button size="lg" className="gap-2 bg-purple-500 text-white hover:bg-purple-600">
-                <Video className="h-5 w-5" />
-                Garantir Meu Acesso
-              </Button>
-            </div>
-          </div>
-        </Card>
-
         {/* Success Stories */}
         <div>
           <h2 className="mb-8 text-center text-3xl font-bold text-foreground">
