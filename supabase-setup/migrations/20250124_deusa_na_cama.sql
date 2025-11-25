@@ -1,7 +1,8 @@
 -- =====================================================
--- MIGRATION: Sistema Multi-Cursos + A Deusa na Cama
+-- MIGRATION: Sistema Multi-Cursos + A Deusa na Cama (CORRIGIDO)
 -- Data: 2025-01-24
--- Descrição: Cria estrutura completa para gerenciar múltiplos produtos/cursos
+-- Versão: 2.0 - COM YOUTUBE IDS REAIS
+-- Descrição: Cria estrutura completa com 40 aulas e IDs reais do YouTube
 -- =====================================================
 
 -- 1. TABELA DE PRODUTOS
@@ -200,7 +201,7 @@ INSERT INTO products (name, slug, description, price, checkout_url, cover_image)
 VALUES (
   'A Deusa na Cama',
   'deusa-na-cama',
-  'Módulo premium de sedução avançada com técnicas secretas que transformam momentos íntimos.',
+  'Módulo premium de sedução avançada com técnicas secretas que transformam momentos íntimos em experiências inesquecíveis.',
   597.00,
   'https://pay.lojou.app/p/pKPr7',
   'https://images.unsplash.com/photo-1523438097201-512ae7d59c44?w=800'
@@ -214,10 +215,9 @@ ON CONFLICT (slug) DO UPDATE SET
   updated_at = NOW();
 
 -- =====================================================
--- INSERIR MÓDULOS E AULAS: A DEUSA NA CAMA
+-- INSERIR MÓDULOS E AULAS: A DEUSA NA CAMA (COM IDS REAIS)
 -- =====================================================
 
--- Obter o ID do produto A Deusa na Cama
 DO $$
 DECLARE
   deusa_product_id UUID;
@@ -232,118 +232,136 @@ BEGIN
   -- Pegar ID do produto
   SELECT id INTO deusa_product_id FROM products WHERE slug = 'deusa-na-cama';
 
-  -- MÓDULO 1: Fundamentos da Sedução
+  -- =====================================================
+  -- MÓDULO 1: O Despertar da Deusa (5 aulas)
+  -- =====================================================
   INSERT INTO course_modules (product_id, module_number, module_name, module_description, cover_image)
   VALUES (
     deusa_product_id, 1,
-    'Fundamentos da Sedução',
-    'Bases essenciais para se tornar irresistível',
+    'O Despertar da Deusa',
+    'Liberte-se da insegurança e abrace seu poder feminino',
     'https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=600'
   ) RETURNING id INTO mod1_id;
 
-  INSERT INTO course_lessons (module_id, lesson_number, lesson_title, lesson_description, youtube_id, duration_minutes) VALUES
-  (mod1_id, 1, 'Introdução: O Poder da Deusa Interior', 'Desperte seu poder feminino', 'dQw4w9WgXcQ', 15),
-  (mod1_id, 2, 'Confiança e Autoestima', 'A base de tudo começa aqui', 'dQw4w9WgXcQ', 20),
-  (mod1_id, 3, 'Linguagem Corporal Sedutora', 'Comunique desejo sem palavras', 'dQw4w9WgXcQ', 18),
-  (mod1_id, 4, 'O Olhar que Hipnotiza', 'Técnicas de contato visual magnético', 'dQw4w9WgXcQ', 12),
-  (mod1_id, 5, 'Tom de Voz Sedutor', 'Como usar sua voz como arma', 'dQw4w9WgXcQ', 16);
+  INSERT INTO course_lessons (module_id, lesson_number, lesson_title, youtube_id, duration_minutes) VALUES
+  (mod1_id, 1, 'Como perder a insegurança antes e durante o sexo', 'BW7wLQECPkc', 15),
+  (mod1_id, 2, 'A técnica da soltura: destravando o corpo e a mente na cama', 'YozK0FZu0dU', 18),
+  (mod1_id, 3, 'Como eliminar a vergonha e assumir sua energia feminina', 'f1mX86Ficio', 20),
+  (mod1_id, 4, 'Como se soltar e inovar sem medo na hora do sexo', 'BMS4D7thPrg', 16),
+  (mod1_id, 5, 'Como perder a vergonha e inovar na hora do sexo', 'JocIiA2pX_4', 17);
 
-  -- MÓDULO 2: Preliminares Memoráveis
+  -- =====================================================
+  -- MÓDULO 2: O Toque Viciante (4 aulas)
+  -- =====================================================
   INSERT INTO course_modules (product_id, module_number, module_name, module_description, cover_image)
   VALUES (
     deusa_product_id, 2,
-    'Preliminares Memoráveis',
-    'A arte de criar antecipação irresistível',
+    'O Toque Viciante',
+    'Domine as zonas que deixam qualquer homem viciado',
     'https://images.unsplash.com/photo-1518199266791-5375a83190b7?w=600'
   ) RETURNING id INTO mod2_id;
 
-  INSERT INTO course_lessons (module_id, lesson_number, lesson_title, lesson_description, youtube_id, duration_minutes) VALUES
-  (mod2_id, 1, 'A Importância das Preliminares', 'Por que isso muda tudo', 'dQw4w9WgXcQ', 14),
-  (mod2_id, 2, 'Toques Estratégicos', 'Onde e como tocar para despertar', 'dQw4w9WgXcQ', 22),
-  (mod2_id, 3, 'Beijos que Viciam', 'Técnicas avançadas de beijo', 'dQw4w9WgXcQ', 17),
-  (mod2_id, 4, 'Massagens Sensuais', 'Relaxamento que leva ao êxtase', 'dQw4w9WgXcQ', 25),
-  (mod2_id, 5, 'Criando o Clima Perfeito', 'Ambiente, música, iluminação', 'dQw4w9WgXcQ', 13),
-  (mod2_id, 6, 'Dirty Talk Básico', 'O que falar no momento certo', 'dQw4w9WgXcQ', 19);
+  INSERT INTO course_lessons (module_id, lesson_number, lesson_title, youtube_id, duration_minutes) VALUES
+  (mod2_id, 1, 'Zonas que deixam qualquer homem viciado no seu corpo', 'b6xb4VXuv0E', 22),
+  (mod2_id, 2, '10 zonas erógenas que deixam os homens com muito tesão', 'hfKNqCIw9Ms', 19),
+  (mod2_id, 3, 'Massagem sensual rápida (5 minutos)', 'K_UylBFh--E', 12),
+  (mod2_id, 4, 'Strip Tease fácil para iniciantes (passo a passo)', 'iLmOtcPCgeM', 14);
 
-  -- MÓDULO 3: Técnicas Avançadas
+  -- =====================================================
+  -- MÓDULO 3: O Segredo Oral (6 aulas)
+  -- =====================================================
   INSERT INTO course_modules (product_id, module_number, module_name, module_description, cover_image)
   VALUES (
     deusa_product_id, 3,
-    'Técnicas Avançadas',
-    'Movimentos e técnicas que ele nunca esquecerá',
+    'O Segredo Oral',
+    'Técnicas que enlouquecem e viciam para sempre',
     'https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?w=600'
   ) RETURNING id INTO mod3_id;
 
-  INSERT INTO course_lessons (module_id, lesson_number, lesson_title, lesson_description, youtube_id, duration_minutes) VALUES
-  (mod3_id, 1, 'Posições Estratégicas', 'As melhores para máximo prazer', 'dQw4w9WgXcQ', 24),
-  (mod3_id, 2, 'Controle e Ritmo', 'Como dominar o tempo', 'dQw4w9WgXcQ', 18),
-  (mod3_id, 3, 'Movimentos Hipnóticos', 'Técnicas de movimento corporal', 'dQw4w9WgXcQ', 21),
-  (mod3_id, 4, 'Zonas Erógenas Secretas Dele', 'Pontos que ele nem conhece', 'dQw4w9WgXcQ', 16),
-  (mod3_id, 5, 'Usando Todos os Sentidos', 'Visão, tato, olfato, paladar', 'dQw4w9WgXcQ', 20);
+  INSERT INTO course_lessons (module_id, lesson_number, lesson_title, youtube_id, duration_minutes) VALUES
+  (mod3_id, 1, 'O mindset das mulheres que enlouquecem no oral', '8KWHAmtfuEM', 16),
+  (mod3_id, 2, 'Como fazer o oral perfeito', '4NC1OBMw7ao', 21),
+  (mod3_id, 3, 'Como dar aquela chupada que deixa ele louco', 'GXKAbadNJVw', 18),
+  (mod3_id, 4, 'Como chupar um p*u direito (avançado)', 'F4ZZr2oVtF0', 23),
+  (mod3_id, 5, 'Técnica da Lambida do Trono', '7oWiE78ns6k', 15),
+  (mod3_id, 6, 'A técnica da laranja — prazer absoluto', 'Q-DuzZq6vlY', 17);
 
-  -- MÓDULO 4: Conexão Emocional Profunda
+  -- =====================================================
+  -- MÓDULO 4: A Cavalgada da Deusa (13 aulas) ★ MÓDULO PRINCIPAL
+  -- =====================================================
   INSERT INTO course_modules (product_id, module_number, module_name, module_description, cover_image)
   VALUES (
     deusa_product_id, 4,
-    'Conexão Emocional Profunda',
-    'Intimidade que transcende o físico',
+    'A Cavalgada da Deusa',
+    'Domine a arte da sentada perfeita e deixe-o viciado',
     'https://images.unsplash.com/photo-1518609878373-06d740f60d8b?w=600'
   ) RETURNING id INTO mod4_id;
 
-  INSERT INTO course_lessons (module_id, lesson_number, lesson_title, lesson_description, youtube_id, duration_minutes) VALUES
-  (mod4_id, 1, 'Vulnerabilidade Sedutora', 'Abrir-se de forma estratégica', 'dQw4w9WgXcQ', 15),
-  (mod4_id, 2, 'Comunicação Íntima', 'Falar sobre desejos e fantasias', 'dQw4w9WgXcQ', 19),
-  (mod4_id, 3, 'Criar Memórias Inesquecíveis', 'Momentos que marcam para sempre', 'dQw4w9WgXcQ', 17),
-  (mod4_id, 4, 'Pós-Intimidade Estratégico', 'O que fazer depois importa', 'dQw4w9WgXcQ', 14),
-  (mod4_id, 5, 'Manter o Mistério', 'Não revele tudo de uma vez', 'dQw4w9WgXcQ', 16);
+  INSERT INTO course_lessons (module_id, lesson_number, lesson_title, youtube_id, duration_minutes) VALUES
+  (mod4_id, 1, 'A Sentada da Deusa (técnica principal)', 'KE6L8iJQkcA', 24),
+  (mod4_id, 2, 'Como cavalgá-lo sem cansar', 'rYgr2sla7Zw', 19),
+  (mod4_id, 3, 'Técnica de sentada que deixa ele em choque', '5UB_j2B68Ec', 21),
+  (mod4_id, 4, 'A Sentada Borboleta Paraguaya', 'MeF1fGBYSJA', 18),
+  (mod4_id, 5, 'Posições para máximo estímulo do clitóris', '-hN9Q7EOiHA', 20),
+  (mod4_id, 6, 'Sentada da Donzela (movimentos avançados)', 'l3MSf81Kj_M', 22),
+  (mod4_id, 7, 'Melhores posições para chegar lá junto com ele', '2n_TKNQESHw', 17),
+  (mod4_id, 8, '3 movimentos para mexer com ele sem dizer nada', 'rPRfTBfW9KY', 14),
+  (mod4_id, 9, '3 posições que eles amam', 'lyUnrpl1KvI', 16),
+  (mod4_id, 10, 'Movimentos que enlouquecem o boy', 'U47Y7B1i78U', 15),
+  (mod4_id, 11, 'Dicas para movimentos durante a hora H', 'P_uqsz-Lhus', 13),
+  (mod4_id, 12, 'Domine a arte de sentar na cadeira', '-g61n3QKFRQ', 19),
+  (mod4_id, 13, 'Pompoarismo para iniciantes (resistência e controle)', '9ArZJydu6RY', 25);
 
-  -- MÓDULO 5: Dirty Talk e Fantasias
+  -- =====================================================
+  -- MÓDULO 5: O Big Bang Sonoro (4 aulas)
+  -- =====================================================
   INSERT INTO course_modules (product_id, module_number, module_name, module_description, cover_image)
   VALUES (
     deusa_product_id, 5,
-    'Dirty Talk e Fantasias',
-    'Comunicação verbal que incendeia a paixão',
+    'O Big Bang Sonoro',
+    'Gema e fale de forma irresistível na hora H',
     'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=600'
   ) RETURNING id INTO mod5_id;
 
-  INSERT INTO course_lessons (module_id, lesson_number, lesson_title, lesson_description, youtube_id, duration_minutes) VALUES
-  (mod5_id, 1, 'Dirty Talk Avançado', 'Frases que elevam a intensidade', 'dQw4w9WgXcQ', 20),
-  (mod5_id, 2, 'Descobrindo Fantasias Dele', 'Como perguntar sem julgamento', 'dQw4w9WgXcQ', 18),
-  (mod5_id, 3, 'Realizando Fantasias com Segurança', 'Limites e consenso', 'dQw4w9WgXcQ', 22),
-  (mod5_id, 4, 'Role-Playing Básico', 'Interpretação de papéis iniciante', 'dQw4w9WgXcQ', 16),
-  (mod5_id, 5, 'Sexting Estratégico', 'Mensagens que aumentam tensão sexual', 'dQw4w9WgXcQ', 15);
+  INSERT INTO course_lessons (module_id, lesson_number, lesson_title, youtube_id, duration_minutes) VALUES
+  (mod5_id, 1, 'Como gemer bonito (mesmo tímida)', '9NgwS2iDPuA', 14),
+  (mod5_id, 2, '4 formas de gemer e enlouquecer qualquer homem', 'Y8b8mZYOUrE', 16),
+  (mod5_id, 3, 'O que falar na hora H (dirty talk para iniciantes)', 'zPPC-3MtKyc', 19),
+  (mod5_id, 4, 'Como perder a vergonha de falar durante o sexo', 'P9a8-To6NyE', 17);
 
-  -- MÓDULO 6: Surpreendendo e Inovando
+  -- =====================================================
+  -- MÓDULO 6: Segredos Profundos (5 aulas)
+  -- =====================================================
   INSERT INTO course_modules (product_id, module_number, module_name, module_description, cover_image)
   VALUES (
     deusa_product_id, 6,
-    'Surpreendendo e Inovando',
-    'Mantenha a chama sempre acesa',
+    'Segredos Profundos',
+    'Explore novos territórios com segurança e prazer',
     'https://images.unsplash.com/photo-1487260211189-670c54da558d?w=600'
   ) RETURNING id INTO mod6_id;
 
-  INSERT INTO course_lessons (module_id, lesson_number, lesson_title, lesson_description, youtube_id, duration_minutes) VALUES
-  (mod6_id, 1, 'Novidades Constantes', 'Como não cair na rotina', 'dQw4w9WgXcQ', 17),
-  (mod6_id, 2, 'Surpresas Sensuais', 'Ideias criativas para inovar', 'dQw4w9WgXcQ', 19),
-  (mod6_id, 3, 'Locais Ousados', 'Quebrando a monotonia do lugar', 'dQw4w9WgXcQ', 15),
-  (mod6_id, 4, 'Acessórios e Jogos', 'Introduzindo elementos novos', 'dQw4w9WgXcQ', 21),
-  (mod6_id, 5, 'Timing Perfeito', 'Quando e como surpreender', 'dQw4w9WgXcQ', 14);
+  INSERT INTO course_lessons (module_id, lesson_number, lesson_title, youtube_id, duration_minutes) VALUES
+  (mod6_id, 1, 'Como dar o C sem dor (guia para iniciantes)', 'O8vm_IczzSk', 22),
+  (mod6_id, 2, 'Sexo anal sem dor — técnica essencial', 'mNLLV-A4JpI', 24),
+  (mod6_id, 3, 'Como dar a roda com prazer', 'f_VCUFzxkxU', 20),
+  (mod6_id, 4, 'Como relaxar e começar no anal de forma segura', 'T1_kLJGFhuA', 18),
+  (mod6_id, 5, 'Introdução ao mundo dos fetiches (seguro e elegante)', 'BESJUeTlkVw', 21);
 
-  -- MÓDULO 7: Manutenção da Paixão
+  -- =====================================================
+  -- MÓDULO 7: Devoção Eterna (3 aulas)
+  -- =====================================================
   INSERT INTO course_modules (product_id, module_number, module_name, module_description, cover_image)
   VALUES (
     deusa_product_id, 7,
-    'Manutenção da Paixão',
-    'Relacionamento ardente para sempre',
+    'Devoção Eterna',
+    'Mantenha-o apaixonado e conectado para sempre',
     'https://images.unsplash.com/photo-1544928147-79a2dbc1f389?w=600'
   ) RETURNING id INTO mod7_id;
 
-  INSERT INTO course_lessons (module_id, lesson_number, lesson_title, lesson_description, youtube_id, duration_minutes) VALUES
-  (mod7_id, 1, 'Paixão a Longo Prazo', 'Estratégias para anos de desejo', 'dQw4w9WgXcQ', 18),
-  (mod7_id, 2, 'Cuidando de Si Mesma', 'Auto-cuidado que atrai', 'dQw4w9WgXcQ', 16),
-  (mod7_id, 3, 'Comunicação Contínua', 'Check-ins sobre satisfação', 'dQw4w9WgXcQ', 19),
-  (mod7_id, 4, 'Superando Momentos Difíceis', 'Reacender a chama quando esfria', 'dQw4w9WgXcQ', 22),
-  (mod7_id, 5, 'Conclusão: Você é Uma Deusa', 'Consolidando seu poder', 'dQw4w9WgXcQ', 15);
+  INSERT INTO course_lessons (module_id, lesson_number, lesson_title, youtube_id, duration_minutes) VALUES
+  (mod7_id, 1, 'Como se comportar após o sexo para aumentar a conexão', 'QtZXVjJngnk', 16),
+  (mod7_id, 2, 'Dica para deixá-lo louco após a transa', 'Vt8QD8RsHA0', 14),
+  (mod7_id, 3, 'O que fazer quando ele some depois do sexo (estratégia da poderosa)', 'irwY5ixTtHY', 19);
 
 END $$;
 
@@ -372,13 +390,27 @@ LEFT JOIN course_lessons cl ON cl.module_id = cm.id
 WHERE p.slug = 'deusa-na-cama'
 GROUP BY p.id, p.name;
 
+-- Listar todas as aulas com URLs completas para teste
+SELECT
+  cm.module_number,
+  cm.module_name,
+  cl.lesson_number,
+  cl.lesson_title,
+  cl.youtube_id,
+  CONCAT('https://www.youtube.com/watch?v=', cl.youtube_id) as url_completa
+FROM course_lessons cl
+JOIN course_modules cm ON cl.module_id = cm.id
+JOIN products p ON cm.product_id = p.id
+WHERE p.slug = 'deusa-na-cama'
+ORDER BY cm.module_number, cl.lesson_number;
+
 -- =====================================================
--- MIGRATION COMPLETA!
+-- MIGRATION COMPLETA COM YOUTUBE IDS REAIS!
 -- =====================================================
--- Total esperado:
+-- Total:
 -- - 2 produtos
 -- - 7 módulos (A Deusa na Cama)
--- - 40 aulas
+-- - 40 aulas COM YOUTUBE IDS REAIS
 -- - RLS habilitado
 -- - Índices criados
 -- - Funções e triggers ativos
