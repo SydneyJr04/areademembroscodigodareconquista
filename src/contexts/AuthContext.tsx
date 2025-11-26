@@ -27,8 +27,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   useEffect(() => {
     let mounted = true;
-    let lastEvent = '';
-    let lastEventTime = 0;
 
     // Check for existing session first
     supabase.auth.getSession().then(({ data: { session } }) => {
@@ -40,22 +38,19 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       }
     });
 
-    // Set up auth state listener with throttle to prevent loops
+    // Set up auth state listener - IGNORE TOKEN_REFRESHED to prevent loops
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((event, session) => {
-      const now = Date.now();
+      console.log('🔄 [AuthContext] onAuthStateChange:', { event, hasSession: !!session, userId: session?.user?.id });
 
-      // Throttle: ignore rapid repeated events (< 1s apart)
-      if (event === lastEvent && event === 'TOKEN_REFRESHED' && now - lastEventTime < 1000) {
-        console.log('⏭️ [AuthContext] Skipping rapid token refresh');
+      // ONLY process SIGNED_IN, SIGNED_OUT, and INITIAL_SESSION
+      // IGNORE TOKEN_REFRESHED to prevent infinite loops
+      if (event === 'TOKEN_REFRESHED') {
+        console.log('⏭️ [AuthContext] Ignoring TOKEN_REFRESHED event');
         return;
       }
 
-      lastEvent = event;
-      lastEventTime = now;
-
-      console.log('🔄 [AuthContext] onAuthStateChange:', { event, hasSession: !!session, userId: session?.user?.id });
       if (mounted) {
         setSession(session);
         setUser(session?.user ?? null);
