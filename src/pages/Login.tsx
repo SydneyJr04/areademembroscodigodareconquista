@@ -26,12 +26,15 @@ const Login = () => {
     e.preventDefault();
     setIsLoading(true);
 
+    console.log('🚀 [Login] Iniciando signIn...');
     const { error } = await signIn(email, password);
 
     if (!error) {
+      console.log('✅ [Login] SignIn bem-sucedido! Navegando para dashboard...');
       toast.success('Bem-vinda de volta! 🎉');
       navigate('/dashboard');
     } else {
+      console.error('❌ [Login] Erro no signIn:', error);
       toast.error('Credenciais inválidas. Verifica o teu e-mail e palavra-passe.');
       setIsLoading(false);
     }
