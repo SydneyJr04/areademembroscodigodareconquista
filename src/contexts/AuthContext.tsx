@@ -30,6 +30,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
     // Check for existing session first
     supabase.auth.getSession().then(({ data: { session } }) => {
+      console.log('🔑 [AuthContext] getSession:', { hasSession: !!session, userId: session?.user?.id });
       if (mounted) {
         setSession(session);
         setUser(session?.user ?? null);
@@ -40,7 +41,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     // Set up auth state listener
     const {
       data: { subscription },
-    } = supabase.auth.onAuthStateChange((_event, session) => {
+    } = supabase.auth.onAuthStateChange((event, session) => {
+      console.log('🔄 [AuthContext] onAuthStateChange:', { event, hasSession: !!session, userId: session?.user?.id });
       if (mounted) {
         setSession(session);
         setUser(session?.user ?? null);

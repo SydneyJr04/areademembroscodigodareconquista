@@ -30,7 +30,9 @@ const Dashboard = () => {
   // AUTENTICAÇÃO
   // ═══════════════════════════════════════════════════════════
   useEffect(() => {
+    console.log('🔐 [Dashboard Auth Check]', { loading, user: !!user, userId: user?.id });
     if (!loading && !user) {
+      console.log('⚠️ [Dashboard] Redirecionando para login - usuário não autenticado');
       navigate('/login');
     }
   }, [user, loading, navigate]);
